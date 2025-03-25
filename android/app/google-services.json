@@ -1,0 +1,214 @@
+{
+  "project_info": {
+    "project_number": "254109061215",
+    "project_id": "example-fire-base",
+    "storage_bucket": "example-fire-base.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254109061215:android:964b4768940da41d208bea",
+        "android_client_info": {
+          "package_name": "com.example.exmp_fire_base"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254109061215-nld9agqh3ob7j8f3cfkoajal6j9jnavt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.exmp_fire_base",
+            "certificate_hash": "500a050cb2ff8289360b16d77ad50466b140e2ca"
+          }
+        },
+        {
+          "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyOuncDdpabnuNMN6YAOKoB8XJEHoaKgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254109061215-6lt4lrjbmm4s5cnbt3hirfqmaqc0slig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nestUser"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254109061215:android:47ad6bb559d01f10208bea",
+        "android_client_info": {
+          "package_name": "com.example.nest_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyOuncDdpabnuNMN6YAOKoB8XJEHoaKgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254109061215-6lt4lrjbmm4s5cnbt3hirfqmaqc0slig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nestUser"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254109061215:android:62902e8938b0cbc9208bea",
+        "android_client_info": {
+          "package_name": "com.example.nest_hotel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254109061215-u6qhuub7fs4vs67ditp8q39nejvtvoc3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nest_hotel",
+            "certificate_hash": "500a050cb2ff8289360b16d77ad50466b140e2ca"
+          }
+        },
+        {
+          "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyOuncDdpabnuNMN6YAOKoB8XJEHoaKgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254109061215-6lt4lrjbmm4s5cnbt3hirfqmaqc0slig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nestUser"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254109061215:android:358ec0bbbf388d84208bea",
+        "android_client_info": {
+          "package_name": "com.example.nest_user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254109061215-lmuc0hc1g4bguib2q2kf3li6ruhe04bh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nest_user",
+            "certificate_hash": "500a050cb2ff8289360b16d77ad50466b140e2ca"
+          }
+        },
+        {
+          "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyOuncDdpabnuNMN6YAOKoB8XJEHoaKgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254109061215-6lt4lrjbmm4s5cnbt3hirfqmaqc0slig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nestUser"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254109061215:android:fc5f1b3fb9761a26208bea",
+        "android_client_info": {
+          "package_name": "com.example.nest_user_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyOuncDdpabnuNMN6YAOKoB8XJEHoaKgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254109061215-tpshdk1lo74h8jkhqeo45ng1r5ovgjnp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "254109061215-6lt4lrjbmm4s5cnbt3hirfqmaqc0slig.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nestUser"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
