@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
+import 'package:nest_user_app/utils/textformfield_utils/textformfield_utils.dart';
 import 'package:nest_user_app/views/auth/forgot_password/forgot_password_page.dart';
 import 'package:nest_user_app/views/auth/signup_page/sign_up_screen.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
@@ -34,16 +35,7 @@ class LoginPageEmailAuth extends StatelessWidget {
             prefixIcon: const Icon(Icons.email),
             labelText: 'Email',
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email is required';
-              } else if (!RegExp(
-                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-z]{2,7}$',
-              ).hasMatch(value)) {
-                return 'Please enter a valid email address';
-              }
-              return null;
-            },
+            validator:ValidationUtils.validateEmail,
           ),
           const SizedBox(height: 30),
           const Align(
@@ -60,14 +52,7 @@ class LoginPageEmailAuth extends StatelessWidget {
             prefixIcon: const Icon(Icons.password),
             obscureText: true,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password is required';
-              } else if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
+            validator: ValidationUtils.validatePassword,
           ),
           const SizedBox(height: 20),
           Align(

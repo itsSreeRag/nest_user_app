@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
+import 'package:nest_user_app/utils/textformfield_utils/textformfield_utils.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
-
 import 'package:provider/provider.dart';
 
 class LoginPagePhoneAuth extends StatelessWidget {
@@ -38,14 +38,7 @@ class LoginPagePhoneAuth extends StatelessWidget {
                       labelText: 'OTP',
                       keyboardType: TextInputType.number,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'OTP is required';
-                        } else if (value.length != 6) {
-                          return 'Please enter a valid 6-digit OTP';
-                        }
-                        return null;
-                      },
+                      validator: ValidationUtils.validateOTP,
                     ),
                     const SizedBox(height: 20),
                     MyCustomButton(
@@ -77,14 +70,7 @@ class LoginPagePhoneAuth extends StatelessWidget {
                       labelText: 'Phone',
                       keyboardType: TextInputType.phone,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Phone number is required';
-                        } else if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
-                          return 'Please enter a valid 10-digit phone number';
-                        }
-                        return null;
-                      },
+                      validator: ValidationUtils.validatePhoneNumber,
                     ),
                     const SizedBox(height: 20),
                     MyCustomButton(
