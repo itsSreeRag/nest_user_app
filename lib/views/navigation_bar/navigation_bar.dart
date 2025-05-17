@@ -2,8 +2,8 @@ import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_not
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
-import 'package:nest_user_app/views/booking/booking_page_main.dart';
-import 'package:nest_user_app/views/home_screen/home_screen.dart';
+import 'package:nest_user_app/views/booking/booking_main.dart';
+import 'package:nest_user_app/views/home_screen/home_page_main.dart';
 import 'package:nest_user_app/views/profile/profile_page_main.dart';
 import 'package:nest_user_app/views/saved/saved_page_main.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +15,7 @@ class MyNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<NavigationBarProvider>(context);
     final pages = [
-      MyHomeScreen(),
+      HomeScreenMain(),
       BooingPageMain(),
       SavedPageMain(),
       ProfilePageMain(),
@@ -44,7 +44,7 @@ class MyNavigationBar extends StatelessWidget {
         durationInMilliSeconds: 500,
         blurOpacity: 15,
 
-        itemLabelStyle: const TextStyle(
+        itemLabelStyle: TextStyle(
           fontSize: 13,
           color: AppColors.white,
           fontWeight: FontWeight.w500,
@@ -56,7 +56,10 @@ class MyNavigationBar extends StatelessWidget {
             itemLabel: 'Home',
           ),
           BottomBarItem(
-            inActiveItem: Icon(Icons.book_online_outlined, color: AppColors.white),
+            inActiveItem: Icon(
+              Icons.book_online_outlined,
+              color: AppColors.white,
+            ),
             activeItem: Icon(Icons.book_online, color: AppColors.white),
             itemLabel: 'Booked',
           ),

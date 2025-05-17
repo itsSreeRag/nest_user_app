@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
-import 'package:nest_user_app/views/home_screen/home_screen.dart';
+import 'package:nest_user_app/views/navigation_bar/navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAuthProviders with ChangeNotifier {
@@ -71,7 +71,7 @@ class MyAuthProviders with ChangeNotifier {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MyHomeScreen()),
+          MaterialPageRoute(builder: (context) => const MyNavigationBar()),
         );
         saveUserLoggedIn();
         return true;
@@ -145,7 +145,7 @@ class MyAuthProviders with ChangeNotifier {
       log(credential.toString());
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const MyHomeScreen()),
+        MaterialPageRoute(builder: (context) => const MyNavigationBar()),
         (route) => false,
       );
       saveUserLoggedIn();
@@ -209,7 +209,7 @@ class MyAuthProviders with ChangeNotifier {
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MyHomeScreen()),
+            MaterialPageRoute(builder: (context) => const MyNavigationBar()),
           );
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -264,7 +264,7 @@ class MyAuthProviders with ChangeNotifier {
       );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MyHomeScreen()),
+        MaterialPageRoute(builder: (context) => const MyNavigationBar()),
       );
       saveUserLoggedIn();
     } on FirebaseAuthException catch (e) {

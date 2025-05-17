@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
+import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
 import 'package:nest_user_app/controllers/splash_screen_povider/splash_screen_provider.dart';
 import 'package:nest_user_app/views/splash_screen/splash_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MyAuthProviders()),
         ChangeNotifierProvider(create: (_) => CustometexfieldProvider()),
         ChangeNotifierProvider(create: (_) => NavigationBarProvider()),
+        ChangeNotifierProvider(create: (_) => HotelProvider()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
