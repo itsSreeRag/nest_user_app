@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
@@ -13,6 +14,7 @@ class ForgotPasswordPage extends StatelessWidget {
     final authProvider = Provider.of<MyAuthProviders>(context);
     TextEditingController emailController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    final MyAppValidators myAppValidators = MyAppValidators();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Forgot Password'),
@@ -66,19 +68,11 @@ class ForgotPasswordPage extends StatelessWidget {
 
                 MyCustomTextFormField(
                   controller: emailController,
-                  prefixIcon: const Icon(Icons.email),
+                  prefixIcon: Icons.email,
                   labelText: 'Email',
+                  hintText: 'Enter Email',
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Email is required';
-                    } else if (!RegExp(
-                      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-z]{2,7}$',
-                    ).hasMatch(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
+                  validator: myAppValidators.validateEmail,
                 ),
                 const SizedBox(height: 24),
                 // Submit button

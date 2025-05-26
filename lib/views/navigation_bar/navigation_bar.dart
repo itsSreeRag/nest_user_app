@@ -4,7 +4,7 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
 import 'package:nest_user_app/views/booking/booking_main.dart';
 import 'package:nest_user_app/views/home_screen/home_page_main.dart';
-import 'package:nest_user_app/views/profile/profile_page_main.dart';
+import 'package:nest_user_app/views/profile/account_page_main.dart';
 import 'package:nest_user_app/views/saved/saved_page_main.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class MyNavigationBar extends StatelessWidget {
       HomeScreenMain(),
       BooingPageMain(),
       SavedPageMain(),
-      ProfilePageMain(),
+      AccountPageMain(),
     ];
 
     return Scaffold(

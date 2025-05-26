@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/utils/textformfield_utils/textformfield_utils.dart';
 import 'package:nest_user_app/views/auth/forgot_password/forgot_password_page.dart';
@@ -18,6 +19,7 @@ class LoginPageEmailAuth extends StatelessWidget {
     TextEditingController passwordController = TextEditingController();
     final authProvider = Provider.of<MyAuthProviders>(context);
     final formKey = GlobalKey<FormState>();
+    final MyAppValidators myAppValidators=MyAppValidators();
     return Form(
       key: formKey,
       child: Column(
@@ -30,12 +32,12 @@ class LoginPageEmailAuth extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          MyCustomTextFormField(
+         MyCustomTextFormField(
             controller: emailController,
-            prefixIcon: const Icon(Icons.email),
-            labelText: 'Email',
+            prefixIcon: Icons.email,
+            hintText: 'Enter Email',
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator:ValidationUtils.validateEmail,
+            validator: myAppValidators.validateEmail,
           ),
           const SizedBox(height: 30),
           const Align(
@@ -48,11 +50,11 @@ class LoginPageEmailAuth extends StatelessWidget {
           const SizedBox(height: 10),
           MyCustomTextFormField(
             controller: passwordController,
-            labelText: 'Password',
-            prefixIcon: const Icon(Icons.password),
+            hintText: 'Enter Password',
+            prefixIcon: Icons.password,
             obscureText: true,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: ValidationUtils.validatePassword,
+            validator: myAppValidators.validatePassword,
           ),
           const SizedBox(height: 20),
           Align(

@@ -18,7 +18,6 @@ class HotelService {
 
       return hotels;
     } catch (e) {
-      print("Error fetching hotel data: $e");
       return [];
     }
   }

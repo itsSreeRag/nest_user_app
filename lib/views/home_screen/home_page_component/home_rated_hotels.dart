@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
+import 'package:nest_user_app/views/hotel_details/hotel_details_main.dart';
 import 'package:nest_user_app/widgets/hotel_card2.dart';
 import 'package:provider/provider.dart';
 
@@ -33,12 +35,23 @@ class HomeRatedHotels extends StatelessWidget {
               itemCount: hotelProvider.hotels.length,
               itemBuilder: (context, index) {
                 final hotel = hotelProvider.hotels[index];
-                return HotelCard2(
-                  imagePath: hotel.images.first,
-                  hotelName: hotel.stayName,
-                  location: hotel.state,
-                  rating: 4.5,
-                  price: hotel.city,
+                return InkWell(
+                  onTap: () {
+                    log('Strt');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HotelDetailsScreen(index: index),
+                      ),
+                    );
+                  },
+                  child: HotelCard2(
+                    imagePath: hotel.profileImage,
+                    hotelName: hotel.stayName,
+                    location: hotel.state,
+                    rating: 4.5,
+                    price: hotel.city,
+                  ),
                 );
               },
             );

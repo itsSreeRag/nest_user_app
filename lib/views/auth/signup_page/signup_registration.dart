@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
@@ -16,6 +17,8 @@ class SignupRegistration extends StatelessWidget {
     TextEditingController passwordController = TextEditingController();
     TextEditingController repasswordController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    final MyAppValidators myAppValidators = MyAppValidators();
+
     return Form(
       key: formKey,
       child: Column(
@@ -30,19 +33,10 @@ class SignupRegistration extends StatelessWidget {
           const SizedBox(height: 10),
           MyCustomTextFormField(
             controller: emailController,
-            prefixIcon: const Icon(Icons.email),
-            labelText: 'Email',
+            prefixIcon: Icons.email,
+            hintText: 'Enter Email',
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Email is required';
-              } else if (!RegExp(
-                r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-z]{2,7}$',
-              ).hasMatch(value)) {
-                return 'Please enter a valid email address';
-              }
-              return null;
-            },
+            validator: myAppValidators.validateEmail,
           ),
           const SizedBox(height: 30),
           const Align(
@@ -55,18 +49,11 @@ class SignupRegistration extends StatelessWidget {
           const SizedBox(height: 10),
           MyCustomTextFormField(
             controller: passwordController,
-            labelText: 'Password',
-            prefixIcon: const Icon(Icons.password),
+            hintText: 'Enter password',
+            prefixIcon: Icons.password,
             obscureText: true,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password is required';
-              } else if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
+            validator: myAppValidators.validatePassword,
           ),
           const SizedBox(height: 30),
           const Align(
@@ -79,18 +66,11 @@ class SignupRegistration extends StatelessWidget {
           const SizedBox(height: 10),
           MyCustomTextFormField(
             controller: repasswordController,
-            labelText: 'Password',
-            prefixIcon: const Icon(Icons.password),
+            hintText: 'Enter Password',
+            prefixIcon: Icons.password,
             obscureText: true,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Password is required';
-              } else if (value.length < 6) {
-                return 'Password must be at least 6 characters';
-              }
-              return null;
-            },
+            validator: myAppValidators.validatePassword,
           ),
           const SizedBox(height: 30),
           Consumer<MyAuthProviders>(

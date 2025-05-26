@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
+import 'package:nest_user_app/views/profile/account_page_informations.dart';
+import 'package:nest_user_app/views/profile/account_page_profile_section.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePageMain extends StatelessWidget {
-  const ProfilePageMain({super.key});
+class AccountPageMain extends StatelessWidget {
+  const AccountPageMain({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +38,25 @@ class ProfilePageMain extends StatelessWidget {
     }
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('profile Page'),
+        backgroundColor: AppColors.white,
+        title: const Text('My Personal Account'),
         actions: [
           InkWell(onTap: showLogoutDialog, child: const Icon(Icons.logout)),
         ],
       ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            ProfileSection(),
+            SizedBox(height: 20),
+            AccountInformations(),
+          ],
+        ),
+      ),
     );
   }
 }
+

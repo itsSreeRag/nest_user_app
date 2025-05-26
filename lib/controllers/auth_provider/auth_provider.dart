@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/controllers/profile_provider/profile_provider.dart';
+import 'package:nest_user_app/models/user_model.dart';
 import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
 import 'package:nest_user_app/views/navigation_bar/navigation_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyAuthProviders with ChangeNotifier {
@@ -63,6 +66,8 @@ class MyAuthProviders with ChangeNotifier {
       notifyListeners();
 
       if (_user != null) {
+        await saveUserToFirestore(context, _user!);
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: AppColors.green,
@@ -101,12 +106,16 @@ class MyAuthProviders with ChangeNotifier {
       _user = _auth.currentUser;
       notifyListeners();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: AppColors.green,
-          content: Text('Account Created Successfully'),
-        ),
-      );
+      if (user != null) {
+        await saveUserToFirestore(context, _user!);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: AppColors.green,
+            content: Text('Account Created Successfully'),
+          ),
+        );
+      }
 
       return true;
     } on FirebaseAuthException catch (e) {
@@ -259,14 +268,18 @@ class MyAuthProviders with ChangeNotifier {
       _user = _auth.currentUser;
       notifyListeners();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("OTP Verified Successfully!")),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MyNavigationBar()),
-      );
-      saveUserLoggedIn();
+      if (user != null) {
+        await saveUserToFirestore(context, _user!);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("OTP Verified Successfully!")),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MyNavigationBar()),
+        );
+        saveUserLoggedIn();
+      }
     } on FirebaseAuthException catch (e) {
       log("OTP Verification Failed: ${e.message}");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -279,5 +292,19 @@ class MyAuthProviders with ChangeNotifier {
 
   Future resetPassword(String email) async {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> saveUserToFirestore(BuildContext context, User user) async {
+    final userModel = UserModel(
+      userId: user.uid,
+      name: user.displayName ?? '',
+      email: user.email ?? '',
+      phoneNumber: user.phoneNumber ?? '',
+      gender: '',
+      profileImage: user.photoURL,
+    );
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    await userProvider.addUser(userModel);
   }
 }
