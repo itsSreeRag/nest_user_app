@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:nest_user_app/constants/stripe_const.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
 import 'package:nest_user_app/controllers/date_range_provider/date_range_provider.dart';
@@ -16,7 +18,12 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await _setup();
   runApp(const MyApp());
+}
+
+Future<void> _setup()async{
+  Stripe.publishableKey= stripePublishableKey;
 }
 
 class MyApp extends StatelessWidget {

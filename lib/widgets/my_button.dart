@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nest_user_app/constants/colors.dart';
 
 class MyCustomButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -11,8 +12,8 @@ class MyCustomButton extends StatelessWidget {
   const MyCustomButton({
     super.key,
     required this.onPressed,
-    required this.backgroundcolor,
-    required this.textcolor,
+     this.backgroundcolor=AppColors.primary,
+     this.textcolor=AppColors.white,
     this.width = 200,
     this.height = 50,
     required this.text,
