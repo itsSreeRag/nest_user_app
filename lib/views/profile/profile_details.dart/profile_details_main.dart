@@ -36,118 +36,121 @@ class ProfileDetailsMain extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.white,
       ),
-      body: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 20),
-                Stack(
-                  children: [
-                    Consumer<AddImageProvider>(
-                      builder: (context, value, child) {
-                        return (userData.userImage!.isNotEmpty)
-                            ? CircleAvatar(
-                              backgroundImage:
-                                  (imageProvider.image == null)
-                                      ? NetworkImage(userData.userImage!)
-                                      : FileImage(imageProvider.image!),
-                              radius: 80,
-                            )
-                            : Container();
-                      },
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
-                            ),
-                            builder:
-                                (context) => const AddRoomImageBottomSheet(),
-                          );
+      body: SingleChildScrollView
+      (
+        child: SafeArea(
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Stack(
+                    children: [
+                      Consumer<AddImageProvider>(
+                        builder: (context, value, child) {
+                          return (userData.userImage!.isNotEmpty)
+                              ? CircleAvatar(
+                                backgroundImage:
+                                    (imageProvider.image == null)
+                                        ? NetworkImage(userData.userImage!)
+                                        : FileImage(imageProvider.image!),
+                                radius: 80,
+                              )
+                              : Container();
                         },
-                        child: CircleAvatar(
-                          backgroundColor: AppColors.grey300,
-                          radius: 30,
-                          child: Icon(Icons.camera_alt),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: InkWell(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20),
+                                ),
+                              ),
+                              builder:
+                                  (context) => const AddRoomImageBottomSheet(),
+                            );
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: AppColors.grey300,
+                            radius: 30,
+                            child: Icon(Icons.camera_alt),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    MyCustomTextFormField(
-                      prefixIcon: Icons.person,
-                      controller: nameController,
-                      hintText: 'Enter Name',
-                      validator: myAppValidators.validateEmail,
-                    ),
-                    SizedBox(height: 10),
-
-                    MyCustomTextFormField(
-                      prefixIcon: Icons.email,
-                      controller: emailController,
-                      hintText: 'Enter The Email',
-                      validator: myAppValidators.validateEmail,
-                    ),
-                    SizedBox(height: 10),
-
-                    MyCustomTextFormField(
-                      controller: phoneNumController,
-                      prefixIcon: Icons.phone_android,
-                      hintText: 'Enter The phone Number',
-                      validator: myAppValidators.validateEmail,
-                    ),
-
-                    SizedBox(height: 50),
-
-                    MyCustomButton(
-                      width: double.infinity,
-                      onPressed: () async {
-                        String? uploadedImage;
-                        if (imageProvider.image != null) {
-                          uploadedImage = await userData.uploadImage(
-                            imageProvider.image!,
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      MyCustomTextFormField(
+                        prefixIcon: Icons.person,
+                        controller: nameController,
+                        hintText: 'Enter Name',
+                        validator: myAppValidators.validateEmail,
+                      ),
+                      SizedBox(height: 10),
+        
+                      MyCustomTextFormField(
+                        prefixIcon: Icons.email,
+                        controller: emailController,
+                        hintText: 'Enter The Email',
+                        validator: myAppValidators.validateEmail,
+                      ),
+                      SizedBox(height: 10),
+        
+                      MyCustomTextFormField(
+                        controller: phoneNumController,
+                        prefixIcon: Icons.phone_android,
+                        hintText: 'Enter The phone Number',
+                        validator: myAppValidators.validateEmail,
+                      ),
+        
+                      SizedBox(height: 50),
+        
+                      MyCustomButton(
+                        width: double.infinity,
+                        onPressed: () async {
+                          String? uploadedImage;
+                          if (imageProvider.image != null) {
+                            uploadedImage = await userData.uploadImage(
+                              imageProvider.image!,
+                            );
+                          }
+        
+                          await userData.updateUser(
+                            UserModel(
+                              userId: userData.currentUser!.userId,
+                              name: nameController.text,
+                              email: emailController.text,
+                              phoneNumber: phoneNumController.text,
+                              profileImage:
+                                  (uploadedImage == null)
+                                      ? (userData.currentUser!.profileImage)
+                                      : (uploadedImage),
+                            ),
+                            // ignore: use_build_context_synchronously
+                            context,
                           );
-                        }
-
-                        await userData.updateUser(
-                          UserModel(
-                            userId: userData.currentUser!.userId,
-                            name: nameController.text,
-                            email: emailController.text,
-                            phoneNumber: phoneNumController.text,
-                            profileImage:
-                                (uploadedImage == null)
-                                    ? (userData.currentUser!.profileImage)
-                                    : (uploadedImage),
-                          ),
                           // ignore: use_build_context_synchronously
-                          context,
-                        );
-                        // ignore: use_build_context_synchronously
-                        Navigator.pop(context);
-                      },
-                      backgroundcolor: AppColors.primary,
-                      textcolor: AppColors.white,
-                      text: 'Submit',
-                    ),
-                  ],
-                ),
-              ],
+                          Navigator.pop(context);
+                        },
+                        backgroundcolor: AppColors.primary,
+                        textcolor: AppColors.white,
+                        text: 'Submit',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

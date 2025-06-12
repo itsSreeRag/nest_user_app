@@ -41,7 +41,9 @@ class HomeRatedHotels extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HotelDetailsScreen(index: index),
+                        builder:
+                            (context) =>
+                                HotelDetailsScreen(hotelId: hotel.profileId),
                       ),
                     );
                   },

@@ -16,7 +16,7 @@ class MyNavigationBar extends StatelessWidget {
     final provider = Provider.of<NavigationBarProvider>(context);
     final pages = [
       HomeScreenMain(),
-      BooingPageMain(),
+      BookingPageMain(),
       SavedPageMain(),
       AccountPageMain(),
     ];

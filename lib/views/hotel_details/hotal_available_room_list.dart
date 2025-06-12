@@ -64,7 +64,10 @@ class _HotelAvailableRoomsListState extends State<HotelAvailableRoomsList> {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => RoomDetailsMain(roomData: room),
+                                (context) => RoomDetailsMain(
+                                  roomId: room.roomId!,
+                                  hotelData: widget.hotelData,
+                                ),
                           ),
                         );
                       },

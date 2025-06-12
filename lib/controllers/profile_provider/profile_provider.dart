@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +99,7 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
 
       MyCustomSnackBar.show(
+        // ignore: use_build_context_synchronously
         context: context,
         title: 'Success',
         message: 'User updated successfully',
@@ -112,6 +112,7 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
 
       MyCustomSnackBar.show(
+        // ignore: use_build_context_synchronously
         context: context,
         title: 'Error',
         message: 'Failed to update user: $_error',

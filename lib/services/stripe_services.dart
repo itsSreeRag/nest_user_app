@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:nest_user_app/constants/stripe_const.dart';
@@ -9,16 +8,12 @@ class StripeServices {
 
   static final StripeServices instance = StripeServices._();
 
-  // Add this method to test network connectivity
   Future<bool> testNetworkConnectivity() async {
     try {
       final Dio dio = Dio();
-      // Test with a simple GET request first
       var response = await dio.get(
         "https://httpbin.org/get",
-        options: Options(
-          receiveTimeout: Duration(seconds: 10),
-        ),
+        options: Options(receiveTimeout: Duration(seconds: 10)),
       );
       return true;
     } catch (e) {
@@ -26,29 +21,42 @@ class StripeServices {
     }
   }
 
-  Future<void> makePayment() async {
+  Future<bool> makePayment(int amountInRupees) async {
     try {
-      // Test network connectivity first
       bool networkAvailable = await testNetworkConnectivity();
       if (!networkAvailable) {
-        return;
+        log("No network connection");
+        return false;
       }
 
-      String? paymentIntentClientSecret = await _createPaymentIntent(10, "usd");
+      String? paymentIntentClientSecret = await _createPaymentIntent(
+        amountInRupees,
+        "inr",
+      );
 
       if (paymentIntentClientSecret == null) {
-        return;
+        log("Failed to create payment intent");
+        return false;
       }
 
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntentClientSecret,
-          merchantDisplayName: 'Nest booking App',
+          merchantDisplayName: 'Nest Booking App',
         ),
       );
-      await processPayment();
+
+      // Show payment sheet and confirm
+      await Stripe.instance.presentPaymentSheet();
+
+      log(" Payment completed successfully");
+      return true;
     } catch (e) {
-      log(e.toString());
+      log(" Error during makePayment: $e");
+      if (e is StripeException) {
+        log("Stripe error: ${e.error.localizedMessage}");
+      }
+      return false;
     }
   }
 
@@ -56,7 +64,6 @@ class StripeServices {
     try {
       final Dio dio = Dio();
 
-      // Configure Dio with timeout settings
       dio.options = BaseOptions(
         connectTimeout: Duration(seconds: 15),
         receiveTimeout: Duration(seconds: 15),
@@ -67,7 +74,6 @@ class StripeServices {
         "amount": _calculateAmount(amount),
         "currency": currency,
       };
-
 
       var response = await dio.post(
         "https://api.stripe.com/v1/payment_intents",
@@ -82,13 +88,13 @@ class StripeServices {
       );
 
       if (response.data != null) {
+        log('response ${response.data}');
         return response.data['client_secret'];
       }
       return null;
     } catch (e) {
       log("Error creating payment intent: $e");
 
-      // More detailed error handling
       if (e is DioException) {
         log("DioException type: ${e.type}");
         log("DioException message: ${e.message}");

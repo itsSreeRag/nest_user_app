@@ -1,8 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/stripe_const.dart';
+import 'package:nest_user_app/controllers/animation_provider/home_animation.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
+import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
 import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
 import 'package:nest_user_app/controllers/date_range_provider/date_range_provider.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
@@ -22,8 +25,8 @@ void main() async {
   runApp(const MyApp());
 }
 
-Future<void> _setup()async{
-  Stripe.publishableKey= stripePublishableKey;
+Future<void> _setup() async {
+  Stripe.publishableKey = stripePublishableKey;
 }
 
 class MyApp extends StatelessWidget {
@@ -43,10 +46,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RoomProvider()),
         ChangeNotifierProvider(create: (context) => DateRangeProvider()),
         ChangeNotifierProvider(create: (context) => RoomDetailImageProvider()),
+        ChangeNotifierProvider(create: (_) => BookingProvider()),
+        ChangeNotifierProvider(create: (_) => HomeAnimationProvider()),
       ],
-      child: const MaterialApp(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: MySplashScreen(),
+        theme: ThemeData(scaffoldBackgroundColor: AppColors.background),
       ),
     );
   }

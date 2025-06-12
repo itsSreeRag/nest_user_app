@@ -91,4 +91,20 @@ class MyAppValidators {
 
     return null;
   }
+
+  String? validateAmount(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Amount is required';
+  }
+
+  final intValue = int.tryParse(value.trim());
+  if (intValue == null) {
+    return 'Enter a valid amount';
+  } else if (intValue <= 0) {
+    return 'Amount must be greater than 0';
+  }
+
+  return null;
+}
+
 }

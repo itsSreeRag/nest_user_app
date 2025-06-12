@@ -10,13 +10,15 @@ import 'package:nest_user_app/views/hotel_details/hotel_review_report.dart';
 import 'package:provider/provider.dart';
 
 class HotelDetailsScreen extends StatelessWidget {
-  final int index;
-  const HotelDetailsScreen({super.key, required this.index});
+  final String hotelId;
+  const HotelDetailsScreen({super.key, required this.hotelId});
 
   @override
   Widget build(BuildContext context) {
     final hotelprovider = Provider.of<HotelProvider>(listen: false, context);
-    final HotelModel hotelData = hotelprovider.hotels[index];
+    final HotelModel hotelData = hotelprovider.hotels.firstWhere(
+      (h) => h.profileId == hotelId,
+    );
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -39,5 +41,3 @@ class HotelDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-
