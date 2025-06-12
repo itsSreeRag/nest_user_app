@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
-import 'package:nest_user_app/utils/textformfield_utils/textformfield_utils.dart';
 import 'package:nest_user_app/views/auth/forgot_password/forgot_password_page.dart';
 import 'package:nest_user_app/views/auth/signup_page/sign_up_screen.dart';
 import 'package:nest_user_app/widgets/my_button.dart';

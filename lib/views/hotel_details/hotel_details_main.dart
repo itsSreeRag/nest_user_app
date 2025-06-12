@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/models/hotel_models.dart';
 import 'package:nest_user_app/views/hotel_details/hotal_available_room_list.dart';

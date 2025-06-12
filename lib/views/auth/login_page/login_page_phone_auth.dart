@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
-import 'package:nest_user_app/utils/textformfield_utils/textformfield_utils.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +13,7 @@ class LoginPagePhoneAuth extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController phoneNumController = TextEditingController();
     final TextEditingController otpController = TextEditingController();
-    final MyAppValidators myAppValidators=MyAppValidators();
+    final MyAppValidators myAppValidators = MyAppValidators();
 
     return Consumer<MyAuthProviders>(
       builder: (context, authProvider, child) {

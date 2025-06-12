@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
+import 'package:provider/provider.dart';
 
 class HotelCard2 extends StatelessWidget {
   final String imagePath;
@@ -7,7 +9,7 @@ class HotelCard2 extends StatelessWidget {
   final String location;
   final double rating;
   final String price;
-  final VoidCallback? onFavoriteTap;
+  final String hotelId;
   final bool isFavorite;
   final List<String> amenities;
 
@@ -18,13 +20,16 @@ class HotelCard2 extends StatelessWidget {
     required this.location,
     required this.rating,
     required this.price,
-    this.onFavoriteTap,
     this.isFavorite = false,
     this.amenities = const ['WiFi', 'Parking', 'Breakfast'],
+    required this.hotelId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
+    final isFav = favoriteProvider.isFavorite(hotelId);
+
     return Container(
       width: double.infinity,
       height: 160,
@@ -116,7 +121,7 @@ class HotelCard2 extends StatelessWidget {
                       hotelName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style:  TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.black87,
@@ -163,7 +168,7 @@ class HotelCard2 extends StatelessWidget {
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color:AppColors.primary.withAlpha(95),
+                                    color: AppColors.primary.withAlpha(95),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -207,29 +212,27 @@ class HotelCard2 extends StatelessWidget {
                         ),
 
                         // Favorite button
-                        Container(
-                          width: 38,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            color:
-                                isFavorite
-                                    ? Colors.red.shade50
-                                    : Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              isFavorite
+                        InkWell(
+                          onTap: () {
+                            favoriteProvider.toggleFavorite(hotelId);
+                          },
+                          child: Container(
+                            width: 38,
+                            height: 38,
+                            decoration: BoxDecoration(
+                              color:
+                                  isFav
+                                      ? Colors.red.shade50
+                                      : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              isFav
                                   ? Icons.favorite_rounded
                                   : Icons.favorite_outline_rounded,
-                              color:
-                                  isFavorite
-                                      ? Colors.red
-                                      : Colors.grey.shade600,
+                              color: isFav ? Colors.red : Colors.grey.shade600,
                               size: 20,
                             ),
-                            onPressed: onFavoriteTap,
-                            padding: EdgeInsets.zero,
                           ),
                         ),
                       ],

@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
+import 'package:provider/provider.dart';
 
 class HotelCard extends StatelessWidget {
   final String imageUrl;
@@ -9,7 +11,7 @@ class HotelCard extends StatelessWidget {
   final double rating;
   final String price;
   final bool isFavorite;
-  final VoidCallback? onFavoriteToggle;
+  final String hotelId;
 
   const HotelCard({
     super.key,
@@ -19,11 +21,14 @@ class HotelCard extends StatelessWidget {
     required this.rating,
     required this.price,
     this.isFavorite = false,
-    this.onFavoriteToggle,
+    required this.hotelId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
+    final isFav = favoriteProvider.isFavorite(hotelId);
+
     return Container(
       width: 170,
       margin: const EdgeInsets.only(right: 10),
@@ -54,23 +59,28 @@ class HotelCard extends StatelessWidget {
           Positioned(
             top: 10,
             right: 10,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withAlpha(
-                      51,
-                    ), // 0.2 opacity for frosted look
-                    shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.white.withAlpha(51)),
-                  ),
-                  child: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: isFavorite ? AppColors.red : AppColors.white,
-                    size: 20,
+            child: InkWell(
+              onTap: () {
+                favoriteProvider.toggleFavorite(hotelId);
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withAlpha(
+                        51,
+                      ), // 0.2 opacity for frosted look
+                      shape: BoxShape.circle,
+                      border: Border.all(color: AppColors.white.withAlpha(51)),
+                    ),
+                    child: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: isFav ? AppColors.red : AppColors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
@@ -151,7 +161,7 @@ class HotelCard extends StatelessWidget {
                                 '$rating rating',
                                 style: const TextStyle(
                                   fontSize: 12,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                               ),
                             ],

@@ -8,6 +8,7 @@ import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
 import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
 import 'package:nest_user_app/controllers/date_range_provider/date_range_provider.dart';
+import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => RoomDetailImageProvider()),
         ChangeNotifierProvider(create: (_) => BookingProvider()),
         ChangeNotifierProvider(create: (_) => HomeAnimationProvider()),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

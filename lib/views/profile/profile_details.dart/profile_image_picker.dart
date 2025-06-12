@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
@@ -40,6 +38,7 @@ class AddRoomImageBottomSheet extends StatelessWidget {
                     IconButton(
                       onPressed: () async {
                         await imageProvider.pickImageFromCamera();
+                        // ignore: use_build_context_synchronously
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.camera, size: 70.0),
@@ -55,6 +54,7 @@ class AddRoomImageBottomSheet extends StatelessWidget {
                     IconButton(
                       onPressed: () async {
                         await imageProvider.pickImageFromGallery();
+                        // ignore: use_build_context_synchronously
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.photo, size: 70.0),

@@ -53,6 +53,7 @@ class HomeRatedHotels extends StatelessWidget {
                     location: hotel.state,
                     rating: 4.5,
                     price: hotel.city,
+                    hotelId:hotel.profileId,
                   ),
                 );
               },
