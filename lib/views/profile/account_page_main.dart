@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
-import 'package:nest_user_app/views/profile/account_page_informations.dart';
-import 'package:nest_user_app/views/profile/account_page_profile_section.dart';
+import 'package:nest_user_app/views/profile/profile_details.dart/widgets/account_page_options_section.dart';
+import 'package:nest_user_app/views/profile/profile_details.dart/widgets/account_page_profile_section.dart';
 import 'package:provider/provider.dart';
 
 class AccountPageMain extends StatelessWidget {
@@ -48,15 +48,19 @@ class AccountPageMain extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            ProfileSection(),
-            SizedBox(height: 20),
-            AccountInformations(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(children: [ProfileSection(), AccountPageOptions(),SizedBox(height: 100,)]),
         ),
       ),
     );
   }
 }
 
+class SampleScreen extends StatelessWidget {
+  const SampleScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold();
+  }
+}

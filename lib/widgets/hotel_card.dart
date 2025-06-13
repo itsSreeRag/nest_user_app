@@ -70,15 +70,15 @@ class HotelCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: AppColors.white.withAlpha(
-                        51,
-                      ), // 0.2 opacity for frosted look
+                      color:isFav
+                                      ? AppColors.red.withAlpha(20)
+                                      : AppColors.grey.withAlpha(50),
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.white.withAlpha(51)),
                     ),
                     child: Icon(
                       isFav ? Icons.favorite : Icons.favorite_border,
-                      color: isFav ? AppColors.red : AppColors.white,
+                      color: isFav ? AppColors.red.withAlpha(200) : AppColors.white,
                       size: 20,
                     ),
                   ),

@@ -4,7 +4,7 @@ import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
 import 'package:nest_user_app/controllers/profile_provider/profile_provider.dart';
 import 'package:nest_user_app/models/user_model.dart';
-import 'package:nest_user_app/views/profile/profile_details.dart/profile_image_picker.dart';
+import 'package:nest_user_app/views/profile/profile_details.dart/widgets/profile_image_picker.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
 import 'package:provider/provider.dart';

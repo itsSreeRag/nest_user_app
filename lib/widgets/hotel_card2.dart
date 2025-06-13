@@ -222,8 +222,8 @@ class HotelCard2 extends StatelessWidget {
                             decoration: BoxDecoration(
                               color:
                                   isFav
-                                      ? Colors.red.shade50
-                                      : Colors.grey.shade100,
+                                      ? AppColors.red.withAlpha(50)
+                                      : AppColors.grey.withAlpha(50),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
