@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
@@ -45,13 +46,21 @@ class HotelCard extends StatelessWidget {
       child: Stack(
         children: [
           // Hotel Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              height: 250,
-              width: double.infinity,
+          SizedBox(
+            width: double.infinity,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+
+              child: CachedNetworkImage(
+                progressIndicatorBuilder:
+                    (context, url, progress) => Center(
+                      child: CircularProgressIndicator(
+                        value: progress.progress,
+                      ),
+                    ),
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
 
@@ -70,15 +79,19 @@ class HotelCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color:isFav
-                                      ? AppColors.red.withAlpha(20)
-                                      : AppColors.grey.withAlpha(50),
+                      color:
+                          isFav
+                              ? AppColors.red.withAlpha(20)
+                              : AppColors.grey.withAlpha(50),
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.white.withAlpha(51)),
                     ),
                     child: Icon(
                       isFav ? Icons.favorite : Icons.favorite_border,
-                      color: isFav ? AppColors.red.withAlpha(200) : AppColors.white,
+                      color:
+                          isFav
+                              ? AppColors.red.withAlpha(200)
+                              : AppColors.white,
                       size: 20,
                     ),
                   ),
@@ -97,14 +110,14 @@ class HotelCard extends StatelessWidget {
                 bottom: Radius.circular(20),
               ),
               child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white.withAlpha(51),
+                    color: AppColors.black.withAlpha(130),
                     borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(20),
                     ),
@@ -158,7 +171,7 @@ class HotelCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                '$rating rating',
+                                '$rating',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.white,
@@ -169,13 +182,13 @@ class HotelCard extends StatelessWidget {
                           Row(
                             children: [
                               Icon(
-                                Icons.nightlight,
+                                Icons.currency_rupee,
                                 size: 14,
                                 color: AppColors.white70,
                               ),
                               const SizedBox(width: 2),
                               Text(
-                                price,
+                                '$price/day',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,

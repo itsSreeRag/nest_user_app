@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nest_user_app/constants/colors.dart';
 
 class TileSection extends StatelessWidget {
   final String title;
@@ -25,27 +26,27 @@ class TileSection extends StatelessWidget {
         leading: CircleAvatar(
           radius: 20,
           backgroundColor: color.withAlpha(9),
-          child: Icon(leadicon, color: Colors.blue),
+          child: Icon(leadicon, color: color),
         ),
         title: Text(
           title,
           style: const TextStyle(
-            color: Colors.black,
+            color: AppColors.black,
             fontWeight: FontWeight.w500,
             fontSize: 15,
           ),
         ),
         subtitle: Text(
           subtitle,
-          style: const TextStyle(
-            color: Colors.grey,
+          style:  TextStyle(
+            color: AppColors.grey,
             fontWeight: FontWeight.normal,
             fontSize: 13,
           ),
         ),
         trailing: IconButton(
           onPressed: () {},
-          icon: Icon(trailicon, size: 16, color: Colors.grey),
+          icon: Icon(trailicon, size: 16, color: AppColors.grey),
         ),
       ),
     );

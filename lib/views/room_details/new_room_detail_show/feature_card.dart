@@ -21,11 +21,13 @@ class FeatureCard extends StatelessWidget {
     final Color active = activeColor ?? Colors.green;
     final Color inactive = inactiveColor ?? Colors.red;
 
-    final Color backgroundColor =
-        isAvailable ? active.withAlpha(25) : inactive.withAlpha(25);
+    final Color backgroundColor = isAvailable
+        ? active.withAlpha(25) 
+        : inactive.withAlpha(25);
 
-    final Color borderColor =
-        isAvailable ? active.withAlpha(77) : inactive.withAlpha(77);
+    final Color borderColor = isAvailable
+        ? active.withAlpha(77) 
+        : inactive.withAlpha(77);
 
     final Color iconColor = isAvailable ? active : inactive;
 
@@ -35,7 +37,10 @@ class FeatureCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: borderColor, width: 1.0),
+        border: Border.all(
+          color: borderColor,
+          width: 1.0,
+        ),
       ),
       child: Row(
         children: [
@@ -59,6 +64,22 @@ class FeatureCard extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: isAvailable ? Colors.black87 : Colors.black54,
+              ),
+            ),
+          ),
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              isAvailable ? 'Available' : 'Not Available',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: iconColor,
               ),
             ),
           ),

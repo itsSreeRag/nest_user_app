@@ -17,6 +17,8 @@ class HotelModel {
 
   // Property Details
   final String stayName;
+  final String basePrice;
+  final String hotelDescription;
   final String accommodationType;
   final String propertyType;
   final bool entireProperty;
@@ -57,6 +59,8 @@ class HotelModel {
 
     // Property Details
     required this.stayName,
+    required this.basePrice,
+    required this.hotelDescription,
     required this.accommodationType,
     required this.propertyType,
     required this.entireProperty,
@@ -92,6 +96,8 @@ class HotelModel {
       'country': country,
       'pincode': pincode,
       'stayName': stayName,
+      'basePrice': basePrice,
+      'hotelDescription': hotelDescription,
       'accommodationType': accommodationType,
       'propertyType': propertyType,
       'entireProperty': entireProperty,
@@ -122,6 +128,8 @@ class HotelModel {
       country: json['country'],
       pincode: json['pincode'],
       stayName: json['stayName'],
+      basePrice: json['basePrice'],
+      hotelDescription: json['hotelDescription'],
       accommodationType: json['accommodationType'],
       propertyType: json['propertyType'],
       entireProperty: json['entireProperty'],

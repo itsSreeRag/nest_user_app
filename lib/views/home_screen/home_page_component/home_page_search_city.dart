@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:nest_user_app/constants/app_constance.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/views/explore_by_city/explore_by_city.dart';
+import 'package:nest_user_app/views/home_screen/home_page_component/search_city_card.dart';
 
 class HomeSearchByCity extends StatelessWidget {
   const HomeSearchByCity({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final List<CityModel> cityData = [
-      CityModel(cityName: 'Near By', cityImages: 'assets/images/images_1.jpg'),
-      CityModel(cityName: 'pune', cityImages: 'assets/images/images_1.jpg'),
-      CityModel(cityName: 'Goa', cityImages: 'assets/images/images_1.jpg'),
-      CityModel(cityName: 'Delhi', cityImages: 'assets/images/images_1.jpg'),
-      CityModel(cityName: 'Kerala', cityImages: 'assets/images/images_1.jpg'),
-    ];
+    final Appconstance appconstance = Appconstance();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,15 +26,6 @@ class HomeSearchByCity extends StatelessWidget {
                 color: AppColors.black87,
               ),
             ),
-
-            Text(
-              'View All',
-              style: TextStyle(
-                fontSize: 13,
-                color: AppColors.primary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -44,29 +33,20 @@ class HomeSearchByCity extends StatelessWidget {
           height: 95,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: cityData.length,
+            itemCount: appconstance.cityData.length,
             itemBuilder: (context, index) {
-              final city = cityData[index];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 7),
-                    child: CircleAvatar(
-                      radius: 36,
-                      backgroundImage: AssetImage(city.cityImages),
+              final city = appconstance.cityData[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => ExploreByCityMain(city: city.cityName),
                     ),
-                  ),
-                  Text(
-                    city.cityName,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.black54,
-                    ),
-                  ),
-                ],
+                  );
+                },
+                child: SearchCityCard(city: city),
               );
             },
           ),

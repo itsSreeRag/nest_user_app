@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/models/room_model.dart';
 
@@ -23,15 +24,20 @@ class RoomCard extends StatelessWidget {
       child: Stack(
         children: [
           // Room Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              room.roomImages.isNotEmpty
-                  ? room.roomImages.first
-                  : 'https://via.placeholder.com/180x250.png?text=No+Image',
-              fit: BoxFit.cover,
-              height: 250,
-              width: double.infinity,
+          SizedBox(
+            width: double.infinity,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: CachedNetworkImage(
+                progressIndicatorBuilder:
+                    (context, url, progress) => Center(
+                      child: CircularProgressIndicator(
+                        value: progress.progress,
+                      ),
+                    ),
+                imageUrl: room.roomImages.first,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
 
@@ -85,7 +91,7 @@ class RoomCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${room.numberOfBeds} bed(s)',
+                            '${room.numberOfRooms} bed(s)',
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white70,

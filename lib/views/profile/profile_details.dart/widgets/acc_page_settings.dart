@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/views/profile/account_page_main.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/widgets/acc_page_tile_section.dart';
+import 'package:nest_user_app/views/profile/account_page_main.dart';
+import 'package:nest_user_app/views/profile/profile_details.dart/widgets/log_out_alert_box.dart';
 
 class AccPageSettings extends StatelessWidget {
   const AccPageSettings({super.key});
@@ -21,35 +22,11 @@ class AccPageSettings extends StatelessWidget {
                 context,
               ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
             },
-            leadicon: Icons.person,
-            title: 'My Account ',
-            subtitle: 'Make changes to your account',
-            trailicon: Icons.arrow_forward_ios,
-            color: Color(0xff0601B4),
-          ),
-          TileSection(
-            ontap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
-            },
             leadicon: Icons.share,
             title: 'Share',
             subtitle: 'Share the app with friends',
             trailicon: Icons.arrow_forward_ios,
-            color: Color(0xff0601B4),
-          ),
-          TileSection(
-            ontap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
-            },
-            leadicon: Icons.share,
-            title: 'Share',
-            subtitle: 'Share the app with friends',
-            trailicon: Icons.arrow_forward_ios,
-            color: Color(0xff0601B4),
+            color: AppColors.primary,
           ),
           TileSection(
             ontap: () {
@@ -61,7 +38,7 @@ class AccPageSettings extends StatelessWidget {
             title: 'Privacy Policy',
             subtitle: 'Read our privacy policy',
             trailicon: Icons.arrow_forward_ios,
-            color: Color(0xff0601B4),
+            color: AppColors.primary,
           ),
           TileSection(
             ontap: () {
@@ -73,19 +50,15 @@ class AccPageSettings extends StatelessWidget {
             title: 'Terms&Conditions',
             subtitle: 'View terms of service',
             trailicon: Icons.arrow_forward_ios,
-            color: Color(0xff0601B4),
+            color: AppColors.primary,
           ),
           TileSection(
-            ontap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
-            },
+            ontap: () => showLogoutDialog(context),
             leadicon: Icons.logout,
             title: 'Logout',
             subtitle: 'Sign out of your Account',
             trailicon: Icons.arrow_forward_ios,
-            color: Color(0xff0601B4),
+            color: AppColors.primary,
           ),
         ],
       ),

@@ -14,9 +14,10 @@ class SavedHotelsGrid extends StatelessWidget {
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
 
     // Filter only favorite hotels
-    final favoriteHotels = hotelProvider.filteredHotels.where((hotel) {
-      return favoriteProvider.favoriteHotelIds.contains(hotel.profileId);
-    }).toList();
+    final favoriteHotels =
+        hotelProvider.filteredHotels.where((hotel) {
+          return favoriteProvider.favoriteHotelIds.contains(hotel.profileId);
+        }).toList();
 
     if (favoriteProvider.isLoading || hotelProvider.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -42,9 +43,8 @@ class SavedHotelsGrid extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HotelDetailsScreen(
-                  hotelId: hotel.profileId,
-                ),
+                builder:
+                    (context) => HotelDetailsScreen(hotelId: hotel.profileId),
               ),
             );
           },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/controllers/animation_provider/home_animation.dart';
+import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
 import 'package:nest_user_app/views/home_screen/home_page.animation.dart';
 import 'package:nest_user_app/views/home_screen/home_page_component/home_location_details.dart';
 import 'package:nest_user_app/views/home_screen/home_page_component/home_page_hotel_near.dart';
@@ -14,8 +15,14 @@ class HomeScreenMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize favorites after the build cycle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.mounted) {
+        Provider.of<FavoriteProvider>(context, listen: false).initialize();
+      }
+    });
+
     return Consumer<HomeAnimationProvider>(
-      // Listening to animation state changes
       builder: (context, animProvider, _) {
         return SafeArea(
           child: Padding(
@@ -54,7 +61,7 @@ class HomeScreenMain extends StatelessWidget {
                   // Rated hotels section with slide-in from bottom
                   SlideFadeAnimation(
                     trigger: animProvider.showRatedHotels,
-                    beginOffset: const Offset(0, 0.2), 
+                    beginOffset: const Offset(0, 0.2),
                     child: HomeRatedHotels(),
                   ),
                 ],

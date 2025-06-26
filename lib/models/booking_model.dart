@@ -22,6 +22,7 @@ class BookingModel {
   final String paymentStatus;
   final String paymentMethod;
   final String bookingStatus;
+  final int numberOfRoomsBooked;
 
   BookingModel({
     required this.bookingId,
@@ -46,6 +47,7 @@ class BookingModel {
     required this.paymentStatus,
     required this.paymentMethod,
     required this.bookingStatus,
+    required this.numberOfRoomsBooked,
   });
 
   Map<String, dynamic> toJson() {
@@ -72,6 +74,7 @@ class BookingModel {
       'paymentStatus': paymentStatus,
       'paymentMethod': paymentMethod,
       'bookingStatus': bookingStatus,
+      'numberOfRoomsBooked': numberOfRoomsBooked,
     };
   }
 
@@ -99,6 +102,7 @@ class BookingModel {
       paymentStatus: json['paymentStatus'],
       paymentMethod: json['paymentMethod'],
       bookingStatus: json['bookingStatus'],
+      numberOfRoomsBooked: json['numberOfRoomsBooked'],
     );
   }
 }

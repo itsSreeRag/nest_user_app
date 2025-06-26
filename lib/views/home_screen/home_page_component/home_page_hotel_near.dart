@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/views/hotel_details/hotel_details_main.dart';
 import 'package:nest_user_app/widgets/hotel_card.dart';
@@ -70,7 +69,7 @@ class HomePageNearHotels extends StatelessWidget {
                       hotelName: hotel.stayName,
                       location: hotel.city,
                       rating: 4.5,
-                      price: hotel.state,
+                      price: hotel.basePrice,
                       hotelId: hotel.profileId,
                     ),
                   );

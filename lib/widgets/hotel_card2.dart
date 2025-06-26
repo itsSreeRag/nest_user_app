@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
@@ -57,20 +58,15 @@ class HotelCard2 extends StatelessWidget {
                 SizedBox(
                   width: 140,
                   height: 160,
-                  child: Image.network(
-                    imagePath,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: AppColors.grey300,
-                        child: const Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: Colors.grey,
+                  child: CachedNetworkImage(
+                    progressIndicatorBuilder:
+                        (context, url, progress) => Center(
+                          child: CircularProgressIndicator(
+                            value: progress.progress,
                           ),
                         ),
-                      );
-                    },
+                    imageUrl: imagePath,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 // Rating badge

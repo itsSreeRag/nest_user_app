@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/models/room_model.dart';
-import 'package:nest_user_app/views/room_details/room_features_section/feature_category_section.dart';
+import 'package:nest_user_app/views/room_details/new_room_detail_show/feature_category_section.dart';
 
 class RoomDetailFeatureSection extends StatelessWidget {
-  const RoomDetailFeatureSection({super.key, required this.roomData});
+  const RoomDetailFeatureSection({
+    super.key,
+    required this.roomData,
+  });
 
   final RoomModel roomData;
 
@@ -46,7 +49,6 @@ class RoomDetailFeatureSection extends StatelessWidget {
     ];
 
     return Container(
-      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -82,6 +84,7 @@ class RoomDetailFeatureSection extends StatelessWidget {
             categoryIcon: Icons.bedroom_parent,
             features: roomFeatures,
           ),
+          const SizedBox(height: 24),
 
           // Dining Features Section
           FeatureCategorySection(
@@ -89,6 +92,7 @@ class RoomDetailFeatureSection extends StatelessWidget {
             categoryIcon: Icons.restaurant,
             features: diningFeatures,
           ),
+          const SizedBox(height: 24),
 
           // Service Features Section
           FeatureCategorySection(
@@ -96,7 +100,9 @@ class RoomDetailFeatureSection extends StatelessWidget {
             categoryIcon: Icons.room_service,
             features: serviceFeatures,
           ),
-
+                                        
+          const SizedBox(height: 24),
+          
           FeatureCategorySection(
             title: 'Policy',
             categoryIcon: Icons.policy,
@@ -106,12 +112,4 @@ class RoomDetailFeatureSection extends StatelessWidget {
       ),
     );
   }
-}
-
-class FeatureItem {
-  final String name;
-  final bool isAvailable;
-  final IconData icon;
-
-  FeatureItem(this.name, this.isAvailable, this.icon);
 }

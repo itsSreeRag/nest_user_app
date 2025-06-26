@@ -9,4 +9,9 @@ class DateRangeProvider extends ChangeNotifier {
     _selectedDateRange = range;
     notifyListeners();
   }
+
+  void clearDateRange() {
+    _selectedDateRange = null;
+    notifyListeners();
+  }
 }

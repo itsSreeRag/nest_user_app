@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/views/room_details/room_features_section/room_detail_feature_section.dart';
-import 'package:nest_user_app/views/room_details/room_features_section/room_feature_card.dart';
+import 'package:nest_user_app/views/room_details/new_room_detail_show/feature_card.dart';
 
 class FeatureCategorySection extends StatelessWidget {
   final String title;
@@ -33,10 +32,12 @@ class FeatureCategorySection extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(height: 15,),
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: features.length,
+          padding: EdgeInsets.only(),
           itemBuilder: (context, index) {
             final feature = features[index];
             return FeatureCard(
@@ -50,4 +51,12 @@ class FeatureCategorySection extends StatelessWidget {
       ],
     );
   }
+}
+
+class FeatureItem {
+  final String name;
+  final bool isAvailable;
+  final IconData icon;
+
+  FeatureItem(this.name, this.isAvailable, this.icon);
 }

@@ -1,4 +1,3 @@
-// // booking_details_page.dart
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/models/booking_model.dart';

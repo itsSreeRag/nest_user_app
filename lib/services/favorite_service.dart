@@ -24,11 +24,11 @@ class FavoriteService {
         .delete();
   }
 
-  Future<List<String>> getFavoriteHotelIds(String userId) async {
+  Future<List<String>> getFavoriteHotelIds() async {
     final snapshot =
         await _firestore
             .collection('users')
-            .doc(userId)
+            .doc(currentUserId)
             .collection('favorites')
             .get();
 

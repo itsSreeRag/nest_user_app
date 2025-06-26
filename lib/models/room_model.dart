@@ -2,12 +2,12 @@ class RoomModel {
   // Basic Room Info
   final String? roomId;
   final String roomName;
-  final String roomDiscription;
+  final String roomDescription;
   final String roomType;
   final String roomTypeDescription;
   final String roomArea;
   final String bedType;
-  final String numberOfBeds;
+  final String numberOfRooms;
 
   // Capacity & Pricing
   final String maxAdults;
@@ -49,12 +49,12 @@ class RoomModel {
   RoomModel({
     this.roomId,
     required this.roomName,
-    required this.roomDiscription,
+    required this.roomDescription,
     required this.roomType,
     required this.roomTypeDescription,
     required this.roomArea,
     required this.bedType,
-    required this.numberOfBeds,
+    required this.numberOfRooms,
     required this.maxAdults,
     required this.maxChildren,
     required this.selectExtraBedTypes,
@@ -86,12 +86,12 @@ class RoomModel {
     return {
       "roomId": roomId,
       "room_name": roomName,
-      "room_description": roomDiscription,
+      "room_description": roomDescription,
       "room_type": roomType,
       "room_type_description": roomTypeDescription,
       "room_area": roomArea,
       "bed_type": bedType,
-      "number_of_beds": numberOfBeds,
+      "number_of_rooms": numberOfRooms,
       "max_adults": maxAdults,
       "max_children": maxChildren,
       "select_extra_bed_types": selectExtraBedTypes,
@@ -124,12 +124,12 @@ class RoomModel {
     return RoomModel(
       roomId: json["roomId"] ?? '',
       roomName: json["room_name"] ?? '',
-      roomDiscription: json["room_description"] ?? '',
+      roomDescription: json["room_description"] ?? '',
       roomType: json["room_type"] ?? '',
       roomTypeDescription: json["room_type_description"] ?? '',
       roomArea: json["room_area"] ?? '',
       bedType: json["bed_type"] ?? '',
-      numberOfBeds: json["number_of_beds"] ?? 0,
+      numberOfRooms: json["number_of_rooms"] ?? '',
       maxAdults: json["max_adults"] ?? 0,
       maxChildren: json["max_children"] ?? 0,
       selectExtraBedTypes: json["select_extra_bed_types"] ?? 0,

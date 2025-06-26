@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/room_provider/room_detail_image_provider.dart';
@@ -54,31 +55,15 @@ class RoomDetailListImages extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(7.0),
-                  child: Image.network(
-                    roomData.roomImages[index],
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (context, error, stackTrace) => Container(
-                          color: AppColors.grey300,
-                          child: Icon(
-                            Icons.broken_image,
-                            color: AppColors.grey,
+                  child: CachedNetworkImage(
+                    progressIndicatorBuilder:
+                        (context, url, progress) => Center(
+                          child: CircularProgressIndicator(
+                            value: progress.progress,
                           ),
                         ),
-                    loadingBuilder:
-                        (context, child, progress) =>
-                            progress == null
-                                ? child
-                                : Center(
-                                  child: CircularProgressIndicator(
-                                    value:
-                                        progress.expectedTotalBytes != null
-                                            ? progress.cumulativeBytesLoaded /
-                                                progress.expectedTotalBytes!
-                                            : null,
-                                    color: AppColors.primary,
-                                  ),
-                                ),
+                    imageUrl: roomData.roomImages[index],
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),

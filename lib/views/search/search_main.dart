@@ -20,7 +20,15 @@ class SearchMainPage extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(backgroundColor: AppColors.background),
+        appBar: AppBar(
+          backgroundColor: AppColors.background,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios),
+          ),
+        ),
         body: Column(
           children: [
             // Search Bar

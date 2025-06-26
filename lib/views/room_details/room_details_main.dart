@@ -3,22 +3,17 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/room_provider/room_provider.dart';
 import 'package:nest_user_app/models/hotel_models.dart';
 import 'package:nest_user_app/models/room_model.dart';
+import 'package:nest_user_app/views/room_details/new_room_details.dart';
+import 'package:nest_user_app/views/room_details/room_detail_image.dart';
 import 'package:nest_user_app/views/room_details/booking_date_picker/booking_section_main.dart';
-import 'package:nest_user_app/views/room_details/room_detail_info/room_detail_info_card.dart';
-import 'package:nest_user_app/views/room_details/room_detaila_image_section/room_detail_image_section.dart';
-import 'package:nest_user_app/views/room_details/room_features_section/room_detail_feature_section.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:provider/provider.dart';
 
 class RoomDetailsMain extends StatelessWidget {
   final String roomId;
-  final HotelModel? hotelData; // ✅ Made nullable
+  final HotelModel? hotelData;
 
-  const RoomDetailsMain({
-    super.key,
-    required this.roomId,
-    this.hotelData, // ✅ Optional parameter
-  });
+  const RoomDetailsMain({super.key, required this.roomId, this.hotelData});
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +24,11 @@ class RoomDetailsMain extends StatelessWidget {
     );
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            RoomDetailImageSection(roomData: roomData),
-            RoomInfoDetailCard(roomData: roomData),
-            RoomDetailFeatureSection(roomData: roomData),
-          ],
-        ),
+      body: Stack(
+        children: [
+          RoomDetailImage(roomData: roomData),
+          RoomDetailSection(roomData: roomData),
+        ],
       ),
       bottomNavigationBar:
           hotelData != null
@@ -51,6 +43,7 @@ class RoomDetailsMain extends StatelessWidget {
                             (context) => BookingSectionMain(
                               hotelData: hotelData!,
                               roomData: roomData,
+                              
                             ),
                       ),
                     );

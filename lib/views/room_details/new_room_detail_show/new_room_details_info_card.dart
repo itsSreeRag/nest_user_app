@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 
-class RoomDetailItem extends StatelessWidget {
+class RoomDetaiInfolItem extends StatelessWidget {
   final String label;
   final String value;
   final String? unit;
   final Color valueColors;
+  final IconData? icon;
+  final Color iconColor;
+  final double iconSize;
 
-  const RoomDetailItem({
+  const RoomDetaiInfolItem({
     super.key,
     required this.label,
     required this.value,
     this.unit,
     this.valueColors = AppColors.black,
+    this.icon,
+    this.iconColor = AppColors.primary,
+    this.iconSize = 24.0,
   });
 
   @override
@@ -20,16 +26,22 @@ class RoomDetailItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(color: AppColors.grey600),
-        ),
-        const SizedBox(height: 4.0),
         Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
+            if (icon != null) Icon(icon, size: iconSize, color: iconColor),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(color: AppColors.grey600),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10.0),
+        Row(
+          children: [
+            SizedBox(width: 10),
             Text(
               value,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(

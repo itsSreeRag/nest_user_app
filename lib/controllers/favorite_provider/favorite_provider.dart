@@ -7,12 +7,32 @@ class FavoriteProvider with ChangeNotifier {
   List<String> get favoriteHotelIds => _favoriteHotelIds;
 
   bool isLoading = false;
+  bool _hasLoaded = false;
+  bool _isInitializing = false;
 
-  Future<void> loadFavorites(String userId) async {
+
+  Future<void> initialize() async {
+    if (!_hasLoaded && !_isInitializing) {
+      await loadFavorites();
+    }
+  }
+
+  Future<void> loadFavorites() async {
+    if (isLoading || _isInitializing) return;
+    
+    _isInitializing = true;
     isLoading = true;
     notifyListeners();
-    _favoriteHotelIds = await _favoriteService.getFavoriteHotelIds(userId);
+    
+    try {
+      _favoriteHotelIds = await _favoriteService.getFavoriteHotelIds();
+      _hasLoaded = true;
+    } catch (e) {
+      // print('Error loading favorites: $e');
+    }
+    
     isLoading = false;
+    _isInitializing = false;
     notifyListeners();
   }
 
@@ -21,6 +41,10 @@ class FavoriteProvider with ChangeNotifier {
   }
 
   Future<void> toggleFavorite(String hotelId) async {
+    if (!_hasLoaded) {
+      await loadFavorites();
+    }
+    
     if (_favoriteHotelIds.contains(hotelId)) {
       await _favoriteService.removeFavorite(hotelId);
       _favoriteHotelIds.remove(hotelId);
@@ -29,5 +53,10 @@ class FavoriteProvider with ChangeNotifier {
       _favoriteHotelIds.add(hotelId);
     }
     notifyListeners();
+  }
+
+  Future<void> refreshFavorites() async {
+    _hasLoaded = false;
+    await loadFavorites();
   }
 }
