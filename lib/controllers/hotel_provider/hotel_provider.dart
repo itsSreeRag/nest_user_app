@@ -61,6 +61,26 @@ class HotelProvider with ChangeNotifier {
     });
   }
 
+  // Sort hotels by price: Low to High
+  void sortHotelsByPriceAscending() {
+    _filteredHotels.sort((a, b) {
+      final priceA = double.tryParse(a.basePrice) ?? 0;
+      final priceB = double.tryParse(b.basePrice) ?? 0;
+      return priceA.compareTo(priceB);
+    });
+    notifyListeners();
+  }
+
+  // Sort hotels by price: High to Low
+  void sortHotelsByPriceDescending() {
+    _filteredHotels.sort((a, b) {
+      final priceA = double.tryParse(a.basePrice) ?? 0;
+      final priceB = double.tryParse(b.basePrice) ?? 0;
+      return priceB.compareTo(priceA);
+    });
+    notifyListeners();
+  }
+
   void clearSearch() {
     _filteredHotels = _hotels;
     notifyListeners();
