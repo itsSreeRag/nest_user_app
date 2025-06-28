@@ -36,11 +36,10 @@ class LocationProvider extends ChangeNotifier {
 
       // Get current position
       Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter:
-              100,
-        ),
+        locationSettings : const LocationSettings(
+    accuracy: LocationAccuracy.high,
+    distanceFilter: 100, // Optional: minimum distance (in meters) to trigger location updates
+  ),
       );
 
       // Reverse geocode to get address

@@ -20,15 +20,15 @@ class HomePageSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus(); 
+        FocusScope.of(context).unfocus();
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const SearchMainPage()),
         );
       },
       child: AbsorbPointer(
-        // Prevents default TextField interaction
         child: Container(
+          height: 50,
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.grey300, width: 3),
             borderRadius: BorderRadius.circular(25),
@@ -41,7 +41,7 @@ class HomePageSearchBar extends StatelessWidget {
               hintText: hintText,
               prefixIcon: const Icon(Icons.search),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(vertical: 15),
+              contentPadding: const EdgeInsets.symmetric(vertical: 7),
             ),
           ),
         ),
