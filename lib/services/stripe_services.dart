@@ -81,7 +81,7 @@ class StripeServices {
         options: Options(
           contentType: Headers.formUrlEncodedContentType,
           headers: {
-            "Authorization": "Bearer $stripeSecretKey",
+            "Authorization": "Bearer ${StripeKeys.secretKey}",
             "Content-Type": 'application/x-www-form-urlencoded',
           },
         ),

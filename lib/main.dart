@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/stripe_const.dart';
@@ -12,6 +13,7 @@ import 'package:nest_user_app/controllers/date_range_provider/person_count_provi
 import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
+import 'package:nest_user_app/controllers/location_provider/location_provider.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
 import 'package:nest_user_app/controllers/page_controller_provider.dart';
 import 'package:nest_user_app/controllers/profile_provider/profile_provider.dart';
@@ -23,13 +25,16 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  await dotenv.load();
+  // log(dotenv.env.toString());
   await Firebase.initializeApp();
   await _setup();
   runApp(const MyApp());
 }
 
 Future<void> _setup() async {
-  Stripe.publishableKey = stripePublishableKey;
+  Stripe.publishableKey = StripeKeys.publishableKey;
 }
 
 class MyApp extends StatelessWidget {
@@ -54,6 +59,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => PageControllerProvider()),
         ChangeNotifierProvider(create: (_) => PersonCountProvider()),
+        ChangeNotifierProvider(create: (_) => LocationProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
