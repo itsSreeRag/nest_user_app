@@ -1,106 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
-// import 'package:provider/provider.dart';
-
-// class MyCustomTextFormField extends StatelessWidget {
-//   final TextEditingController controller;
-//   final String labelText;
-//   final String? hintText;
-//   final Icon? prefixIcon;
-//   // final Icon? suffixIcon;
-//   final bool obscureText;
-//   final String? prefixText;
-//   final TextInputType keyboardType;
-//   final TextInputAction textInputAction;
-//   final FormFieldValidator<String>? validator;
-//   final void Function(String)? onChanged;
-//   final EdgeInsetsGeometry? contentPadding;
-//   final Color? borderColor;
-//   final Color? focusedBorderColor;
-//   final Color? enabledBorderColor;
-//   final Color? errorBorderColor;
-//   final AutovalidateMode autovalidateMode;
-//   final int? maxlength;
-
-//   const MyCustomTextFormField({
-//     super.key,
-//     required this.controller,
-//     required this.labelText,
-//     this.hintText,
-//     this.prefixText,
-//     this.prefixIcon,
-//     // this.suffixIcon,
-//     this.obscureText = false,
-//     this.keyboardType = TextInputType.text,
-//     this.textInputAction = TextInputAction.done,
-//     this.validator,
-//     this.onChanged,
-//     this.contentPadding,
-//     this.borderColor,
-//     this.focusedBorderColor,
-//     this.enabledBorderColor,
-//     this.errorBorderColor,
-//     this.autovalidateMode = AutovalidateMode.disabled,
-//     this.maxlength,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer<CustometexfieldProvider>(
-//       builder: (context, custometexfieldProvider, child) {
-//         return TextFormField(
-//           controller: controller,
-//           obscureText:
-//               obscureText ? custometexfieldProvider.isObscureText : obscureText,
-//           keyboardType: keyboardType,
-//           textInputAction: textInputAction,
-//           validator: validator,
-//           onChanged: onChanged,
-//           maxLength: maxlength,
-//           autovalidateMode: autovalidateMode,
-//           decoration: InputDecoration(
-//             prefixText: prefixText,
-//             labelText: labelText,
-//             hintText: hintText,
-//             prefixIcon: prefixIcon,
-//             suffixIcon:
-//                 obscureText
-//                     ? IconButton(
-//                       onPressed: () {
-//                         custometexfieldProvider.visibilityButtonClick();
-//                       },
-//                       icon:
-//                           custometexfieldProvider.isObscureText
-//                               ? const Icon(Icons.visibility)
-//                               : const Icon(Icons.visibility_off),
-//                     )
-//                     : null,
-//             contentPadding:
-//                 contentPadding ??
-//                 const EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
-//             border: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(10.0),
-//               borderSide: BorderSide(color: borderColor ?? Colors.grey),
-//             ),
-//             focusedBorder: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(10.0),
-//               borderSide: BorderSide(color: focusedBorderColor ?? Colors.blue),
-//             ),
-//             enabledBorder: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(10.0),
-//               borderSide: BorderSide(color: enabledBorderColor ?? Colors.grey),
-//             ),
-//             errorBorder: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(10.0),
-//               borderSide: BorderSide(color: errorBorderColor ?? Colors.red),
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nest_user_app/constants/colors.dart';
@@ -128,6 +25,7 @@ class MyCustomTextFormField extends StatelessWidget {
   final bool readOnly;
   final List<TextInputFormatter>? inputFormatters;
   final int maxLines;
+  final int? minLines;
 
   const MyCustomTextFormField({
     super.key,
@@ -151,6 +49,7 @@ class MyCustomTextFormField extends StatelessWidget {
     this.readOnly = false,
     this.inputFormatters,
     this.maxLines = 1,
+    this.minLines = 1,
   });
 
   @override
@@ -183,11 +82,13 @@ class MyCustomTextFormField extends StatelessWidget {
                 ],
               ),
               child: TextFormField(
-                minLines: 1,
+                minLines: minLines,
                 maxLines: maxLines,
                 controller: controller,
                 obscureText:
-                    obscureText ? custometexfieldProvider.isObscureText : obscureText,
+                    obscureText
+                        ? custometexfieldProvider.isObscureText
+                        : obscureText,
                 keyboardType: keyboardType,
                 textInputAction: textInputAction,
                 validator: validator,
@@ -201,13 +102,10 @@ class MyCustomTextFormField extends StatelessWidget {
                   prefixText: prefixText,
                   hintText: hintText,
                   hintStyle: TextStyle(color: AppColors.black38, fontSize: 14),
-                  prefixIcon: prefixIcon != null
-                      ? Icon(
-                          prefixIcon,
-                          color: AppColors.primary,
-                          size: 20,
-                        )
-                      : null,
+                  prefixIcon:
+                      prefixIcon != null
+                          ? Icon(prefixIcon, color: AppColors.primary, size: 20)
+                          : null,
                   suffixIcon:
                       obscureText
                           ? IconButton(
@@ -228,7 +126,10 @@ class MyCustomTextFormField extends StatelessWidget {
                       ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: borderColor ?? AppColors.grey300, width: 1),
+                    borderSide: BorderSide(
+                      color: borderColor ?? AppColors.grey300,
+                      width: 1,
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -239,11 +140,17 @@ class MyCustomTextFormField extends StatelessWidget {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: enabledBorderColor ?? AppColors.grey300, width: 1),
+                    borderSide: BorderSide(
+                      color: enabledBorderColor ?? AppColors.grey300,
+                      width: 1,
+                    ),
                   ),
                   errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: errorBorderColor ?? AppColors.red, width: 1),
+                    borderSide: BorderSide(
+                      color: errorBorderColor ?? AppColors.red,
+                      width: 1,
+                    ),
                   ),
                 ),
                 readOnly: readOnly,

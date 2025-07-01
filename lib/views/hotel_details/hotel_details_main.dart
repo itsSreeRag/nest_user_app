@@ -38,7 +38,7 @@ class HotelDetailsScreen extends StatelessWidget {
 
             SizedBox(height: 20),
 
-            HotelReviewReport(),
+            HotelReviewReport(hotelId: hotelId),
           ],
         ),
       ),

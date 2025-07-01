@@ -32,7 +32,26 @@ class HomePageNearHotels extends StatelessWidget {
         }
 
         if (filteredHotels.isEmpty) {
-          return const Center(child: Text("No hotels found."));
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              Text(
+                (locationProvider.city!.isEmpty)
+                    ? 'All Hotels'
+                    : 'Hotels in ${locationProvider.city}',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black87,
+                ),
+              ),
+              SizedBox(
+                height: 210,
+                child: const Center(child: Text("No hotels found.")),
+              ),
+            ],
+          );
         }
 
         return Column(

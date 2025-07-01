@@ -85,13 +85,13 @@ class RoomDetailsHeading extends StatelessWidget {
                       color: AppColors.white,
                     ),
                   ),
-                  Text(
-                    '/day',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.white,
-                    ),
-                  ),
+                  // Text(
+                  //   '/day',
+                  //   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  //     fontWeight: FontWeight.w500,
+                  //     color: AppColors.white,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

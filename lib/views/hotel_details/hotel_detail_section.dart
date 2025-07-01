@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/models/hotel_models.dart';
 import 'package:nest_user_app/views/hotel_details/widgets/hotel_description_widget.dart';
 import 'package:nest_user_app/views/hotel_details/widgets/location_card_widget.dart';
