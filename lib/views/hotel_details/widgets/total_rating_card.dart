@@ -3,8 +3,14 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:nest_user_app/constants/colors.dart';
 
 class TotalRatingCard extends StatelessWidget {
+  final double averageRating;
+  final int totalRating;
+  final int totalReviews;
   const TotalRatingCard({
     super.key,
+    required this.averageRating,
+    required this.totalRating,
+    required this.totalReviews,
   });
 
   @override
@@ -12,7 +18,7 @@ class TotalRatingCard extends StatelessWidget {
     return Row(
       children: [
         Text(
-          '4.0',
+          averageRating.toString(),
           style: TextStyle(
             color: AppColors.black,
             fontSize: 50,
@@ -23,16 +29,15 @@ class TotalRatingCard extends StatelessWidget {
         Column(
           children: [
             RatingBarIndicator(
-              rating: 4,
+              rating:  averageRating,
               itemBuilder:
-                  (context, _) =>
-                      Icon(Icons.star, color: AppColors.secondary),
+                  (context, _) => Icon(Icons.star, color: AppColors.secondary),
               itemCount: 5,
               itemSize: 30,
             ),
             SizedBox(height: 10),
             Text(
-              '420 ratings . 210 reviews',
+              '$totalRating ratings . $totalReviews reviews',
               style: TextStyle(
                 color: AppColors.black54,
                 fontSize: 14,

@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/widgets/my_custom_snackbar.dart';
 
 class LocationProvider extends ChangeNotifier {
   String? city = '';
@@ -8,7 +12,7 @@ class LocationProvider extends ChangeNotifier {
   String? errorMessage;
   bool isLoading = false;
 
-  Future<void> fetchCurrentLocation() async {
+  Future<void> fetchCurrentLocation(BuildContext context) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
@@ -36,10 +40,11 @@ class LocationProvider extends ChangeNotifier {
 
       // Get current position
       Position position = await Geolocator.getCurrentPosition(
-        locationSettings : const LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 100, // Optional: minimum distance (in meters) to trigger location updates
-  ),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter:
+              100, // Optional: minimum distance (in meters) to trigger location updates
+        ),
       );
 
       // Reverse geocode to get address
@@ -52,7 +57,21 @@ class LocationProvider extends ChangeNotifier {
         city = placemarks.first.locality ?? '';
         state = placemarks.first.administrativeArea ?? '';
       }
+        MyCustomSnackBar.show(
+      context: context,
+      title: 'Location Fetched',
+      message: 'Latitude: ${position.latitude}, Longitude: ${position.longitude}',
+      backgroundColor: AppColors.green,
+      accentColor: AppColors.white,
+    );
     } catch (e) {
+      MyCustomSnackBar.show(
+        context: context,
+        title: 'Error',
+        message: 'Failed to fetch location: ${e.toString()}',
+        backgroundColor: AppColors.red,
+        accentColor: AppColors.white,
+      );
       errorMessage = "Failed to get location: $e";
     }
 

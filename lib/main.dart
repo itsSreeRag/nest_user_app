@@ -36,6 +36,7 @@ void main() async {
 
 Future<void> _setup() async {
   Stripe.publishableKey = StripeKeys.publishableKey;
+
 }
 
 class MyApp extends StatelessWidget {
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PageControllerProvider()),
         ChangeNotifierProvider(create: (_) => PersonCountProvider()),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
-        ChangeNotifierProvider(create: (context) => ReviewRatingController(),)
+        ChangeNotifierProvider(create: (context) => ReviewRatingProvider(),)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

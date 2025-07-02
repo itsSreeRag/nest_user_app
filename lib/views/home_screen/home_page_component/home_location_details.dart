@@ -12,7 +12,7 @@ class HomeLocationDetails extends StatelessWidget {
       builder: (context, locationProvider, child) {
         return InkWell(
           onTap: () async {
-            await locationProvider.fetchCurrentLocation();
+            await locationProvider.fetchCurrentLocation(context);
           },
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,

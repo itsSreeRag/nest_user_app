@@ -1,9 +1,10 @@
-// widgets/room_details_card.dart
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/controllers/room_provider/room_provider.dart';
 import 'package:nest_user_app/models/booking_model.dart';
 import 'package:nest_user_app/views/booking/booking_details/widgets/detail_row.dart';
 import 'package:nest_user_app/views/room_details/room_details_main.dart';
+import 'package:provider/provider.dart';
 
 class RoomDetailsCard extends StatelessWidget {
   final BookingModel booking;
@@ -38,16 +39,20 @@ class RoomDetailsCard extends StatelessWidget {
             DetailRow(label: 'Check-out Time', value: booking.checkOutTime),
 
             InkWell(
-              onTap:
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => RoomDetailsMain(
-                            roomId:booking.roomId ,
-                          ),
-                    ),
+              onTap: () async {
+               await Provider.of<RoomProvider>(
+                  context,
+                  listen: false,
+                ).fetchRoomsForHotel(booking.hotelId);
+                Navigator.push(
+                  // ignore: use_build_context_synchronously
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => RoomDetailsMain(roomId: booking.roomId),
                   ),
+                );
+              },
               child: Container(
                 height: 50,
                 decoration: BoxDecoration(

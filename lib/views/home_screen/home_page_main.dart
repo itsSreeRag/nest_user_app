@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/controllers/animation_provider/home_animation.dart';
 import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
+import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/views/home_screen/home_page.animation.dart';
 import 'package:nest_user_app/views/home_screen/home_page_component/home_location_details.dart';
 import 'package:nest_user_app/views/home_screen/home_page_component/home_page_hotel_near.dart';
@@ -15,59 +16,59 @@ class HomeScreenMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize favorites after the build cycle
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (context.mounted) {
-        Provider.of<FavoriteProvider>(context, listen: false).initialize();
-      }
-    });
+    final hotelProvider = Provider.of<HotelProvider>(context, listen: false);
+    final favoriteProvider = Provider.of<FavoriteProvider>(context, listen: false);
 
-    return Consumer<HomeAnimationProvider>(
-      builder: (context, animProvider, _) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Displays user location details
-                  HomeLocationDetails(),
+    return FutureBuilder(
+      future: Future.wait([
+         hotelProvider.initFuture,
+        favoriteProvider.initFuture,
+      ]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-                  // Search bar for typing queries
-                  HomePageSearchBar(onChanged: (value) {}),
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
 
-                  // Carousel offers with slide-in animation from right
-                  SlideFadeAnimation(
-                    trigger: animProvider.showSearchByCity,
-                    beginOffset: Offset(0.2, 0),
-                    child: HomeOfferCarousel(),
-                  ),
-
-                  // "Search by City" section with slide-in from bottom
-                  SlideFadeAnimation(
-                    trigger: animProvider.showNearHotels,
-                    beginOffset: const Offset(0, 0.2),
-                    child: HomeSearchByCity(),
-                  ),
-
-                  // Nearby hotels section with slide-in from right
-                  SlideFadeAnimation(
-                    trigger: animProvider.showRatedHotels,
-                    beginOffset: const Offset(0.2, 0),
-                    child: HomePageNearHotels(),
-                  ),
-
-                  // Rated hotels section with slide-in from bottom
-                  SlideFadeAnimation(
-                    trigger: animProvider.showRatedHotels,
-                    beginOffset: const Offset(0, 0.2),
-                    child: HomeRatedHotels(),
-                  ),
-                ],
+        return Consumer<HomeAnimationProvider>(
+          builder: (context, animProvider, _) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 30,),
+                    HomeLocationDetails(),
+                    HomePageSearchBar(onChanged: (value) {}),
+                    SlideFadeAnimation(
+                      trigger: animProvider.showSearchByCity,
+                      beginOffset: const Offset(0.2, 0),
+                      child: HomeOfferCarousel(),
+                    ),
+                    SlideFadeAnimation(
+                      trigger: animProvider.showNearHotels,
+                      beginOffset: const Offset(0, 0.2),
+                      child: HomeSearchByCity(),
+                    ),
+                    SlideFadeAnimation(
+                      trigger: animProvider.showRatedHotels,
+                      beginOffset: const Offset(0.2, 0),
+                      child: HomePageNearHotels(),
+                    ),
+                    SlideFadeAnimation(
+                      trigger: animProvider.showRatedHotels,
+                      beginOffset: const Offset(0, 0.2),
+                      child: SuggestedHotels(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );

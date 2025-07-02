@@ -5,8 +5,8 @@ import 'package:nest_user_app/views/hotel_details/hotel_details_main.dart';
 import 'package:nest_user_app/widgets/hotel_card2.dart';
 import 'package:provider/provider.dart';
 
-class HomeRatedHotels extends StatelessWidget {
-  const HomeRatedHotels({super.key});
+class SuggestedHotels extends StatelessWidget {
+  const SuggestedHotels({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class HomeRatedHotels extends StatelessWidget {
       children: [
         const SizedBox(height: 10),
         const Text(
-          'Highest Rated Hotels',
+          'Suggested Hotels',
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
@@ -32,6 +32,7 @@ class HomeRatedHotels extends StatelessWidget {
             return ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.all(0),
               itemCount: hotelProvider.hotels.length,
               itemBuilder: (context, index) {
                 final hotel = hotelProvider.hotels[index];
@@ -53,7 +54,7 @@ class HomeRatedHotels extends StatelessWidget {
                     location: hotel.state,
                     rating: 4.5,
                     price: hotel.basePrice,
-                    hotelId:hotel.profileId,
+                    hotelId: hotel.profileId,
                   ),
                 );
               },

@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/services/favorite_service.dart';
+import 'package:nest_user_app/widgets/my_custom_snackbar.dart';
 
 class FavoriteProvider with ChangeNotifier {
   final FavoriteService _favoriteService = FavoriteService();
@@ -10,6 +14,8 @@ class FavoriteProvider with ChangeNotifier {
   bool _hasLoaded = false;
   bool _isInitializing = false;
 
+  Future<void>? _initFuture;
+  Future<void> get initFuture => _initFuture ??= initialize();
 
   Future<void> initialize() async {
     if (!_hasLoaded && !_isInitializing) {
@@ -19,18 +25,21 @@ class FavoriteProvider with ChangeNotifier {
 
   Future<void> loadFavorites() async {
     if (isLoading || _isInitializing) return;
-    
+
     _isInitializing = true;
-    isLoading = true;
-    notifyListeners();
-    
+
+    Future.microtask(() {
+      isLoading = true;
+      notifyListeners();
+    });
+
     try {
       _favoriteHotelIds = await _favoriteService.getFavoriteHotelIds();
       _hasLoaded = true;
     } catch (e) {
-      // print('Error loading favorites: $e');
+      // Handle or log error
     }
-    
+
     isLoading = false;
     _isInitializing = false;
     notifyListeners();
@@ -40,16 +49,31 @@ class FavoriteProvider with ChangeNotifier {
     return _favoriteHotelIds.contains(hotelId);
   }
 
-  Future<void> toggleFavorite(String hotelId) async {
+  Future<void> toggleFavorite(String hotelId, BuildContext context) async {
     if (!_hasLoaded) {
       await loadFavorites();
     }
-    
+
     if (_favoriteHotelIds.contains(hotelId)) {
       await _favoriteService.removeFavorite(hotelId);
+      MyCustomSnackBar.show(
+        context: context,
+        title: 'Remove from Saved',
+        message: 'successfully removed from the saved hotels',
+        backgroundColor: AppColors.red,
+        accentColor: AppColors.white,
+      );
+
       _favoriteHotelIds.remove(hotelId);
     } else {
       await _favoriteService.addFavorite(hotelId);
+      MyCustomSnackBar.show(
+        context: context,
+        title: 'Added to Saved',
+        message: 'successfully added to the saved hotels',
+        backgroundColor: AppColors.green,
+        accentColor: AppColors.white,
+      );
       _favoriteHotelIds.add(hotelId);
     }
     notifyListeners();

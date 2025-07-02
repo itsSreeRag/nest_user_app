@@ -78,7 +78,7 @@ class HomePageNearHotels extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final hotel = filteredHotels[index];
                   return InkWell(
-                    onTap: () {
+                    onTap: () async{
                       Navigator.push(
                         context,
                         MaterialPageRoute(

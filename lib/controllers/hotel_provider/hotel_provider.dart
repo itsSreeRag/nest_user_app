@@ -18,27 +18,34 @@ class HotelProvider with ChangeNotifier {
 
   Timer? _debouncer;
 
-  HotelProvider() {
-    fetchHotels();
-  }
+Future<void>? _initFuture;
+Future<void> get initFuture => _initFuture ??= _initialize();
+
+Future<void> _initialize() async {
+  await fetchHotels();
+  // add other async logic if needed
+}
 
   // Fetch hotels from Firebase
-  Future<void> fetchHotels() async {
+Future<void> fetchHotels() async {
+  Future.microtask(() {
     _isLoading = true;
     notifyListeners();
+  });
 
-    try {
-      _hotels = await _hotelService.fetchApprovedHotels();
-      _filteredHotels = _hotels;
-    } catch (e) {
-      log("Error fetching hotels: $e");
-      _hotels = [];
-      _filteredHotels = [];
-    }
-
-    _isLoading = false;
-    notifyListeners();
+  try {
+    _hotels = await _hotelService.fetchApprovedHotels();
+    _filteredHotels = _hotels;
+  } catch (e) {
+    log("Error fetching hotels: $e");
+    _hotels = [];
+    _filteredHotels = [];
   }
+
+  _isLoading = false;
+  notifyListeners();
+}
+
 
   // Search hotels with debounce
   void searchHotels(String query) {

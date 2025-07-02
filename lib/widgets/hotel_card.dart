@@ -70,7 +70,7 @@ class HotelCard extends StatelessWidget {
             right: 10,
             child: InkWell(
               onTap: () {
-                favoriteProvider.toggleFavorite(hotelId);
+                favoriteProvider.toggleFavorite(hotelId,context);
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
@@ -162,23 +162,23 @@ class HotelCard extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                size: 14,
-                                color: AppColors.secondary,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                '$rating',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.white,
-                                ),
-                              ),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     const Icon(
+                          //       Icons.star,
+                          //       size: 14,
+                          //       color: AppColors.secondary,
+                          //     ),
+                          //     const SizedBox(width: 2),
+                          //     Text(
+                          //       '$rating',
+                          //       style: const TextStyle(
+                          //         fontSize: 12,
+                          //         color: AppColors.white,
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           Row(
                             children: [
                               Icon(

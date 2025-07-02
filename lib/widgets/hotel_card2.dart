@@ -70,38 +70,38 @@ class HotelCard2 extends StatelessWidget {
                   ),
                 ),
                 // Rating badge
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.black.withAlpha(153),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.star_rounded,
-                          color: AppColors.secondary,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          rating.toString(),
-                          style: const TextStyle(
-                            color: AppColors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   top: 12,
+                //   left: 12,
+                //   child: Container(
+                //     padding: const EdgeInsets.symmetric(
+                //       horizontal: 8,
+                //       vertical: 4,
+                //     ),
+                //     decoration: BoxDecoration(
+                //       color: AppColors.black.withAlpha(153),
+                //       borderRadius: BorderRadius.circular(16),
+                //     ),
+                //     child: Row(
+                //       children: [
+                //         const Icon(
+                //           Icons.star_rounded,
+                //           color: AppColors.secondary,
+                //           size: 16,
+                //         ),
+                //         const SizedBox(width: 4),
+                //         Text(
+                //           rating.toString(),
+                //           style: const TextStyle(
+                //             color: AppColors.white,
+                //             fontSize: 12,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
 
@@ -210,7 +210,7 @@ class HotelCard2 extends StatelessWidget {
                         // Favorite button
                         InkWell(
                           onTap: () {
-                            favoriteProvider.toggleFavorite(hotelId);
+                            favoriteProvider.toggleFavorite(hotelId,context);
                           },
                           child: Container(
                             width: 38,

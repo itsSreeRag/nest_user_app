@@ -50,7 +50,7 @@ class TopControls extends StatelessWidget {
             right: 20,
             child: GestureDetector(
               onTap: () {
-                context.read<FavoriteProvider>().toggleFavorite(hotelId);
+                context.read<FavoriteProvider>().toggleFavorite(hotelId,context);
                 HapticFeedback.lightImpact();
               },
               child: AnimatedContainer(

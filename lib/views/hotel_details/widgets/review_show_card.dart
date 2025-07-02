@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/models/review_rating_model.dart';
 import 'package:readmore/readmore.dart';
 
 class ReviewShowCard extends StatelessWidget {
-  const ReviewShowCard({
-    super.key,
-  });
+  final ReviewRatingModel reviews;
+  const ReviewShowCard({super.key, required this.reviews});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class ReviewShowCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Sreerag',
+          reviews.publicName,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -23,26 +24,26 @@ class ReviewShowCard extends StatelessWidget {
         ),
         SizedBox(height: 10),
         RatingBarIndicator(
-          rating: 4,
+          rating: reviews.ratings,
           itemBuilder:
-              (context, _) =>
-                  Icon(Icons.star, color: AppColors.secondary),
+              (context, _) => Icon(Icons.star, color: AppColors.secondary),
           itemCount: 5,
           itemSize: 20,
         ),
         SizedBox(height: 10),
+        Text(
+          reviews.reviewTitle,
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+        ),
+        SizedBox(height: 8),
         ReadMoreText(
-          'I had a wonderful experience staying at this hotel. The rooms were very clean, the staff was extremely courteous, and the overall ambiance was peaceful. The location was also convenient, close to many attractions. I would definitely stay here again and recommend it to others.!',
+          reviews.review,
           trimLines: 3,
           colorClickableText: AppColors.primary,
           trimMode: TrimMode.Line,
           trimCollapsedText: '...See more',
           trimExpandedText: ' See less',
-          style: TextStyle(
-            fontSize: 16,
-            height: 1.5,
-            color: AppColors.black87,
-          ),
+          style: TextStyle(fontSize: 16, height: 1.5, color: AppColors.black87),
           moreStyle: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -55,7 +56,10 @@ class ReviewShowCard extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10),
-        Text('01/07/2025', style: TextStyle(color: AppColors.grey)),
+        Text(
+           DateFormat('dd MMM yyyy, hh:mm a').format(reviews.createdAt),
+          style: TextStyle(color: AppColors.grey),
+        ),
         SizedBox(height: 20),
       ],
     );

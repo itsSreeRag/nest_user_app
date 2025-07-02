@@ -15,10 +15,10 @@ class HomeOfferCarousel extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 5),
-        const Text(
-          'Best Offer For You',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
+        // const Text(
+        //   'Best Offer For You',
+        //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        // ),
         const SizedBox(height: 5),
         CarouselSlider(
           options: CarouselOptions(
