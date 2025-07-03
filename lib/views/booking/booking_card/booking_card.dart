@@ -51,7 +51,8 @@ class BookingsCard extends StatelessWidget {
                 children: booking.children,
               ),
               const SizedBox(height: 24),
-              const CancelButton(),
+              if (booking.bookingStatus == 'Booked')
+                CancelButton(booking: booking),
             ],
           ),
         ),

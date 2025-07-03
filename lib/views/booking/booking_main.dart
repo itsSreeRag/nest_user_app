@@ -10,53 +10,133 @@ class BookingPageMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bookingProvider = Provider.of<BookingProvider>(
-      context,
-      listen: false,
-    );
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.background,
+          title: const Text(
+            'My Bookings',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
+          centerTitle: true,
+          bottom: TabBar(
+            labelColor: AppColors.primary,
+            indicatorColor: AppColors.primary,
+            unselectedLabelColor: AppColors.black54,
+            tabs: [
+              Tab(text: 'Upcoming'),
+              Tab(text: 'Completed'),
+              Tab(text: 'Cancelled'),
+            ],
+          ),
+        ),
+        body: Consumer<BookingProvider>(
+          builder: (context, provider, _) {
+            // if (provider.bookings.isEmpty && !provider.isLoading) {
+            //   WidgetsBinding.instance.addPostFrameCallback((_) {
+            //     provider.fetchBookings();
+            //   });
+            // }
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      bookingProvider.fetchBookings();
-    });
+            if (provider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
-        title: const Text('My Bookings'),
-        centerTitle: true,
-      ),
-      body: Consumer<BookingProvider>(
-        builder: (context, provider, _) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+            final now = DateTime.now();
+            final today = DateTime(now.year, now.month, now.day);
 
-          if (provider.bookings.isEmpty) {
-            return const Center(child: Text('No bookings found.'));
-          }
+            final upcoming =
+                provider.bookings.where((b) {
+                  final checkOut = DateTime(
+                    b.checkOutDate.year,
+                    b.checkOutDate.month,
+                    b.checkOutDate.day,
+                  );
 
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
-              itemCount: provider.bookings.length,
-              itemBuilder: (context, index) {
-                final booking = provider.bookings[index];
+                  return b.bookingStatus == 'Booked' && checkOut.isAfter(today);
+                }).toList();
 
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => BookingDetailsPage(booking: booking),
-                      ),
-                    );
-                  },
-                  child: BookingsCard(booking: booking),
-                );
+            final completed =
+                provider.bookings.where((b) {
+                  final checkOut = DateTime(
+                    b.checkOutDate.year,
+                    b.checkOutDate.month,
+                    b.checkOutDate.day,
+                  );
+
+                  return b.bookingStatus == 'Booked' &&
+                      checkOut.isBefore(today);
+                }).toList();
+
+            final cancelled =
+                provider.bookings
+                    .where((b) => b.bookingStatus == 'Cancelled')
+                    .toList();
+
+            return RefreshIndicator(
+              onRefresh: () async {
+                await provider.fetchBookings();
               },
+              child: TabBarView(
+                children: [
+                  _buildBookingList(context, upcoming, 'No upcoming bookings.'),
+                  _buildBookingList(
+                    context,
+                    completed,
+                    'No completed bookings.',
+                  ),
+                  _buildBookingList(
+                    context,
+                    cancelled,
+                    'No cancelled bookings.',
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBookingList(
+    BuildContext context,
+    List bookings,
+    String emptyMsg,
+  ) {
+    if (bookings.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.book_outlined, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 16),
+            Text(
+              emptyMsg,
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
+          ],
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        itemCount: bookings.length,
+        itemBuilder: (context, index) {
+          final booking = bookings[index];
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BookingDetailsPage(booking: booking),
+                ),
+              );
+            },
+            child: BookingsCard(booking: booking),
           );
         },
       ),

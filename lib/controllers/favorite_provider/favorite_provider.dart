@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/services/favorite_service.dart';
-import 'package:nest_user_app/widgets/my_custom_snackbar.dart';
+import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
 
 class FavoriteProvider with ChangeNotifier {
   final FavoriteService _favoriteService = FavoriteService();

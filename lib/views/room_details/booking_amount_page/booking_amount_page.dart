@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 class BookingAmountPage extends StatelessWidget {
   final HotelModel hotelData;
   final RoomModel roomData;
+
   const BookingAmountPage({
     super.key,
     required this.hotelData,
@@ -22,10 +23,8 @@ class BookingAmountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bookingProvider = Provider.of<BookingProvider>(
-      context,
-      listen: false,
-    );
+    final bookingProvider = context.watch<BookingProvider>();
+    final totalAmount = bookingProvider.totalAmount;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -77,7 +76,7 @@ class BookingAmountPage extends StatelessWidget {
                     ],
                   ),
                   child: Text(
-                    '₹${bookingProvider.amount?.toStringAsFixed(2)}',
+                    '₹${totalAmount?.toStringAsFixed(2) ?? '0.00'}',
                     style: TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
@@ -95,47 +94,40 @@ class BookingAmountPage extends StatelessWidget {
           ),
         ),
       ),
-
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: MyCustomButton(
           onPressed: () async {
-            final bookingProvider = Provider.of<BookingProvider>(
-              context,
-              listen: false,
-            );
-            final amount = bookingProvider.amount;
+            final bookingProvider = context.read<BookingProvider>();
+            final amount = bookingProvider.totalAmount;
 
             if (amount == null || amount <= 0) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Please select a valid date range first'),
-                ),
-              );
+              _showSnackBar(context, 'Please select a valid date range first.');
               return;
             }
 
             await bookingProvider.bookRoom(
               context: context,
+              hotelId: hotelData.uid,
               hotelData: hotelData,
               roomData: roomData,
-              hotelId: hotelData.uid,
               roomId: roomData.roomId!,
             );
-            Provider.of<DateRangeProvider>(
-              // ignore: use_build_context_synchronously
-              context,
-              listen: false,
-            ).clearDateRange();
 
-            Provider.of<PersonCountProvider>(
-              // ignore: use_build_context_synchronously
-              context,
-              listen: false,
-            ).clearPersonData();
+            context.read<DateRangeProvider>().clearDateRange();
+            context.read<PersonCountProvider>().clearPersonData();
           },
-          text: 'Proceed to Pay ₹${bookingProvider.amount?.toStringAsFixed(2)}',
+          text: 'Proceed to Pay ₹${totalAmount?.toStringAsFixed(2) ?? '0.00'}',
         ),
+      ),
+    );
+  }
+
+  void _showSnackBar(BuildContext context, String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: AppColors.red,
       ),
     );
   }

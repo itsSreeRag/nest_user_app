@@ -1,81 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:nest_user_app/constants/colors.dart';
-// import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
-// import 'package:provider/provider.dart';
-
-// class BookingSummaryCard extends StatelessWidget {
-//   const BookingSummaryCard({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final amount = Provider.of<BookingProvider>(context).amount;
-
-//     return Container(
-//       width: double.infinity,
-//       padding: const EdgeInsets.all(20),
-//       decoration: BoxDecoration(
-//         color: AppColors.white,
-//         borderRadius: BorderRadius.circular(16),
-//         boxShadow: [
-//           BoxShadow(
-//             color: AppColors.black.withAlpha(50),
-//             blurRadius: 10,
-//             offset: const Offset(0, 2),
-//           ),
-//         ],
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Text(
-//             'Payment Details',
-//             style: TextStyle(
-//               fontSize: 18,
-//               fontWeight: FontWeight.w600,
-//               color: AppColors.black87,
-//             ),
-//           ),
-//           const SizedBox(height: 16),
-//           _buildDetailRow('Service Amount', '₹${amount?.toStringAsFixed(2)}'),
-//           const SizedBox(height: 8),
-//           _buildDetailRow('Tax & Fees', '₹0.00'),
-//           const SizedBox(height: 12),
-//           Divider(color: AppColors.grey),
-//           const SizedBox(height: 12),
-//           _buildDetailRow(
-//             'Total Amount',
-//             '₹${amount?.toStringAsFixed(2)}',
-//             isTotal: true,
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   Widget _buildDetailRow(String label, String value, {bool isTotal = false}) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         Text(
-//           label,
-//           style: TextStyle(
-//             fontSize: isTotal ? 16 : 14,
-//             fontWeight: isTotal ? FontWeight.w600 : FontWeight.w500,
-//             color: isTotal ? AppColors.black87 : AppColors.grey600,
-//           ),
-//         ),
-//         Text(
-//           value,
-//           style: TextStyle(
-//             fontSize: isTotal ? 16 : 14,
-//             fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
-//             color: AppColors.black87,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
@@ -85,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class BookingSummaryCard extends StatelessWidget {
   final RoomModel roomData;
-  
+
   const BookingSummaryCard({
     super.key,
     required this.roomData,
@@ -93,17 +15,22 @@ class BookingSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bookingProvider = Provider.of<BookingProvider>(context);
-    final personCountProvider = Provider.of<PersonCountProvider>(context);
-    final amount = bookingProvider.amount;
-    
-    // Calculate required rooms
-    final maxAdultsPerRoom = int.tryParse(roomData.maxAdults) ?? 1;
-    final maxChildrenPerRoom = int.tryParse(roomData.maxChildren) ?? 0;
-    final requiredRooms = personCountProvider.calculateRequiredRooms(
-      maxAdultsPerRoom: maxAdultsPerRoom,
-      maxChildrenPerRoom: maxChildrenPerRoom,
-    );
+    final bookingProvider = context.watch<BookingProvider>();
+    final personCountProvider = context.watch<PersonCountProvider>();
+
+    final int? amount = bookingProvider.totalAmount;
+    final int adultCount = bookingProvider.adultCount ?? personCountProvider.adultCount;
+    final int childrenCount = bookingProvider.childrenCount ?? personCountProvider.childrenCount;
+    final int totalGuests = adultCount + childrenCount;
+
+    final int maxAdultsPerRoom = int.tryParse(roomData.maxAdults) ?? 1;
+    final int maxChildrenPerRoom = int.tryParse(roomData.maxChildren) ?? 0;
+
+    final int requiredRooms = bookingProvider.requiredRooms ??
+        personCountProvider.calculateRequiredRooms(
+          maxAdultsPerRoom: maxAdultsPerRoom,
+          maxChildrenPerRoom: maxChildrenPerRoom,
+        );
 
     return Container(
       width: double.infinity,
@@ -131,37 +58,35 @@ class BookingSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
-          // Room & Guest Information Section
+
+          // Room & Guest Information
           _buildSectionHeader('Room & Guest Details'),
           const SizedBox(height: 8),
-          _buildDetailRow('Adults', '${personCountProvider.adultCount}'),
+          _buildDetailRow('Adults', '$adultCount'),
           const SizedBox(height: 4),
-          _buildDetailRow('Children', '${personCountProvider.childrenCount}'),
+          _buildDetailRow('Children', '$childrenCount'),
           const SizedBox(height: 4),
-          _buildDetailRow('Total Guests', '${personCountProvider.totalCount}'),
+          _buildDetailRow('Total Guests', '$totalGuests'),
           const SizedBox(height: 8),
           _buildDetailRow(
-            'Rooms Required', 
+            'Rooms Required',
             '$requiredRooms ${requiredRooms == 1 ? 'Room' : 'Rooms'}',
             isHighlight: true,
           ),
           const SizedBox(height: 4),
           _buildCapacityInfo(maxAdultsPerRoom, maxChildrenPerRoom),
-          
+
           const SizedBox(height: 16),
-          
-          // Payment Details Section
+
+          // Payment Details
           _buildSectionHeader('Payment Details'),
           const SizedBox(height: 8),
           _buildDetailRow('Service Amount', '₹${amount?.toStringAsFixed(2) ?? '0.00'}'),
           const SizedBox(height: 4),
           _buildDetailRow('Tax & Fees', '₹0.00'),
-          
           const SizedBox(height: 12),
           Divider(color: AppColors.grey),
           const SizedBox(height: 12),
-          
           _buildDetailRow(
             'Total Amount',
             '₹${amount?.toStringAsFixed(2) ?? '0.00'}',
@@ -183,7 +108,8 @@ class BookingSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value, {bool isTotal = false, bool isHighlight = false}) {
+  Widget _buildDetailRow(String label, String value,
+      {bool isTotal = false, bool isHighlight = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -192,14 +118,18 @@ class BookingSummaryCard extends StatelessWidget {
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
             fontWeight: isTotal ? FontWeight.w600 : FontWeight.w500,
-            color: isTotal ? AppColors.black87 : (isHighlight ? AppColors.primary : AppColors.grey600),
+            color: isTotal
+                ? AppColors.black87
+                : (isHighlight ? AppColors.primary : AppColors.grey600),
           ),
         ),
         Text(
           value,
           style: TextStyle(
             fontSize: isTotal ? 16 : 14,
-            fontWeight: isTotal ? FontWeight.bold : (isHighlight ? FontWeight.w600 : FontWeight.w500),
+            fontWeight: isTotal
+                ? FontWeight.bold
+                : (isHighlight ? FontWeight.w600 : FontWeight.w500),
             color: isHighlight ? AppColors.primary : AppColors.black87,
           ),
         ),

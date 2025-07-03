@@ -9,16 +9,16 @@ class SavedPageMain extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.background,
         title: Text(
-          'Saved Hotels',
+          'Your Saved Hotels',
           style: TextStyle(
-            color: AppColors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
+            color: AppColors.black87,
+            fontSize: 25,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        centerTitle: true,
+
       ),
       body: Center(child: SavedHotelsGrid()),
     );

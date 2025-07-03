@@ -1,19 +1,22 @@
 // ignore_for_file: use_build_context_synchronously
-import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/controllers/profile_provider/profile_provider.dart';
+import 'package:nest_user_app/controllers/auth_provider/auth_helpers.dart';
+import 'package:nest_user_app/controllers/auth_provider/auth_messages.dart';
+import 'package:nest_user_app/controllers/profile_provider/user_provider.dart';
 import 'package:nest_user_app/models/user_model.dart';
 import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
 import 'package:nest_user_app/views/navigation_bar/navigation_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class MyAuthProviders with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   String? _errorMessage;
   User? _user;
   bool showOtpField = false;
@@ -22,58 +25,46 @@ class MyAuthProviders with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   User? get user => _user;
 
-  //-------------check user is logged in or not------------------
-  Future checkUserLogin() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('isLoggedIn');
-    if (isLoggedIn == null || isLoggedIn == false) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  // -----------save user logged in-------------
+  // Check if user is already logged in
+  Future<bool> checkUserLogin() async =>
+      (await SharedPreferences.getInstance()).getBool('isLoggedIn') ?? false;
 
-  Future saveUserLoggedIn() async {
-    log('shared pref');
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
-    log('${prefs.getBool('isLoggedIn')}');
-  }
+  Future<void> saveUserLoggedIn() async =>
+      (await SharedPreferences.getInstance()).setBool('isLoggedIn', true);
 
-  // ----------- Registration using google account---------------
+  Future<void> logout(BuildContext context) async {
+    await _googleSignIn.signOut();
+    await _auth.signOut();
+    _user = null;
+    notifyListeners();
+    AuthMessages.showSuccess(context, 'LogOut successful');
+
+    (await SharedPreferences.getInstance()).setBool('isLoggedIn', false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LogInPageMain()),
+      (route) => false,
+    );
+  }
 
   Future<bool> regUsingGoogleAcc(BuildContext context) async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        return false;
-      }
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return false;
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await _auth.signInWithCredential(
-        credential,
-      );
-
+      final userCredential = await _auth.signInWithCredential(credential);
       _user = userCredential.user;
       notifyListeners();
 
       if (_user != null) {
-        await saveUserToFirestore(context, _user!);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: AppColors.green,
-            content: Text("Google Sign-In Successful"),
-          ),
-        );
+        await _saveUserToFirestore(context, _user!);
+        AuthMessages.showSuccess(context, 'Google Sign-In Successful');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyNavigationBar()),
@@ -83,75 +74,34 @@ class MyAuthProviders with ChangeNotifier {
       }
       return false;
     } catch (e) {
-      log("Google Sign-In Error: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Google Sign-In Failed: ${e.toString()}")),
-      );
+      AuthMessages.showError(context, 'Google Sign-In Failed: $e');
       return false;
     }
   }
 
-  //--------------Registration Using Email---------------------
-
-  Future<bool> createAccount(
-    String email,
-    String password,
-    BuildContext context,
-  ) async {
+  Future<bool> createAccount(String email, String password, BuildContext context) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
       _user = _auth.currentUser;
       notifyListeners();
 
-      if (user != null) {
-        await saveUserToFirestore(context, _user!);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: AppColors.green,
-            content: Text('Account Created Successfully'),
-          ),
-        );
+      if (_user != null) {
+        await _saveUserToFirestore(context, _user!);
+        AuthMessages.showSuccess(context, 'Account Created Successfully');
       }
 
       return true;
     } on FirebaseAuthException catch (e) {
-      String message;
-      if (e.code == 'weak-password') {
-        message = 'The password is too weak.';
-      } else if (e.code == 'email-already-in-use') {
-        message = 'The email is already in use.';
-      } else {
-        message = e.message ?? 'An unknown error occurred.';
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(backgroundColor: AppColors.red, content: Text(message)),
-      );
-
-      _errorMessage = message;
+      _errorMessage = AuthHelpers.getRegisterErrorMessage(e);
       notifyListeners();
+      AuthMessages.showError(context, _errorMessage!);
       return false;
     }
   }
 
-  //-------------------Login Using Emial-------------------
-
-  Future<void> loginAccount(
-    String emailAddress,
-    String password,
-    BuildContext context,
-  ) async {
+  Future<void> loginAccount(String email, String password, BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
-
-      log(credential.toString());
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyNavigationBar()),
@@ -159,121 +109,60 @@ class MyAuthProviders with ChangeNotifier {
       );
       saveUserLoggedIn();
     } on FirebaseAuthException catch (e) {
-      String errorMessage;
-      if (e.code == 'user-not-found') {
-        errorMessage = 'No user found for that email.';
-      } else if (e.code == 'wrong-password') {
-        errorMessage = 'Wrong password provided.';
-      } else {
-        errorMessage = 'Login failed: ${e.message}';
-      }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(errorMessage)));
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An unexpected error occurred.')),
-      );
+      AuthMessages.showError(context, AuthHelpers.getLoginErrorMessage(e));
+    } catch (_) {
+      AuthMessages.showError(context, 'An unexpected error occurred.');
     }
   }
 
-  //-------------------Log Out-------------------
-
-  Future<void> logout(BuildContext context) async {
-    await _googleSignIn.signOut();
-    await _auth.signOut();
-    _user = null;
-    notifyListeners();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        backgroundColor: AppColors.green,
-        content: Text('LogOut successful'),
-      ),
-    );
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const LogInPageMain()),
-      (route) => false,
-    );
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', false);
-  }
-  //----------------------Send OTP for Phone Authentication-------------------
-
-  void sendOTP(BuildContext context, TextEditingController phoneNumbers) async {
-    String phoneNumber = '+91${phoneNumbers.text.trim()}';
-    log("Sending OTP to: $phoneNumber");
-
+  void sendOTP(BuildContext context, TextEditingController phoneController) async {
+    final phone = '+91${phoneController.text.trim()}';
     try {
-      await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          log("Auto verification completed");
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phone,
+        verificationCompleted: (credential) async {
           await _auth.signInWithCredential(credential);
           _user = _auth.currentUser;
           notifyListeners();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Auto verification successful!")),
-          );
+          AuthMessages.showSuccess(context, 'Auto verification successful!');
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MyNavigationBar()),
           );
         },
-        verificationFailed: (FirebaseAuthException e) {
-          log("Verification Failed: ${e.message}");
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Verification failed: ${e.message}")),
-          );
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          log("OTP Sent to $phoneNumber");
-          this.verificationId = verificationId;
+        verificationFailed: (e) => AuthMessages.showError(context, 'Verification failed: ${e.message}'),
+        codeSent: (id, _) {
+          verificationId = id;
           showOtpField = true;
           notifyListeners();
         },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          log("Auto retrieval timeout");
-        },
+        codeAutoRetrievalTimeout: (_) {},
       );
     } catch (e) {
-      log("Error sending OTP: $e");
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error: $e")));
+      AuthMessages.showError(context, 'Error: $e');
     }
   }
 
-  // ----------- Verify OTP ---------------
-  Future<void> verifyOTP(
-    BuildContext context,
-    TextEditingController otpController,
-  ) async {
+  Future<void> verifyOTP(BuildContext context, TextEditingController otpController) async {
     try {
       if (verificationId == null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("No OTP request found.")));
+        AuthMessages.showError(context, 'No OTP request found.');
         return;
       }
 
-      String otp = otpController.text.trim();
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+      final otp = otpController.text.trim();
+      final credential = PhoneAuthProvider.credential(
         verificationId: verificationId!,
         smsCode: otp,
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      await _auth.signInWithCredential(credential);
       _user = _auth.currentUser;
       notifyListeners();
 
-      if (user != null) {
-        await saveUserToFirestore(context, _user!);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OTP Verified Successfully!")),
-        );
+      if (_user != null) {
+        await _saveUserToFirestore(context, _user!);
+        AuthMessages.showSuccess(context, 'OTP Verified Successfully!');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyNavigationBar()),
@@ -281,20 +170,21 @@ class MyAuthProviders with ChangeNotifier {
         saveUserLoggedIn();
       }
     } on FirebaseAuthException catch (e) {
-      log("OTP Verification Failed: ${e.message}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("OTP Verification Failed: ${e.message}")),
-      );
+      AuthMessages.showError(context, 'OTP Verification Failed: ${e.message}');
     }
   }
 
-  //-------------forgot password------------------
-
-  Future resetPassword(String email) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  Future<void> resetPassword(String email) async {
+    await _auth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> saveUserToFirestore(BuildContext context, User user) async {
+  Future<void> _saveUserToFirestore(BuildContext context, User user) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+  // Check if user already exists in Firestore
+  final existingUser = await userProvider.getUserById(user.uid);
+
+  if (existingUser == null) {
     final userModel = UserModel(
       userId: user.uid,
       name: user.displayName ?? '',
@@ -304,7 +194,11 @@ class MyAuthProviders with ChangeNotifier {
       profileImage: user.photoURL,
     );
 
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
     await userProvider.addUser(userModel);
+  } else {
+    // Optionally update the userProvider with the existing user
+    userProvider.setCurrentUser(existingUser); // if you have such a method
   }
+}
+
 }

@@ -45,11 +45,6 @@ class RoomDetailBasicInfo extends StatelessWidget {
               icon: Icons.bed,
             ),
             RoomDetaiInfolItem(
-              label: 'No. of Beds',
-              value: roomData.numberOfRooms,
-              icon: Icons.view_agenda,
-            ),
-            RoomDetaiInfolItem(
               label: 'Adults',
               value: roomData.maxAdults,
               icon: Icons.person,

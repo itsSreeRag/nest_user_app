@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,16 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/models/user_model.dart';
-import 'package:nest_user_app/widgets/my_custom_snackbar.dart';
+import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
 
 class UserProvider with ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   UserModel? _currentUser;
   bool _isLoading = false;
   String? _error;
-
   String? userImage;
 
   UserModel? get currentUser => _currentUser;
@@ -26,6 +28,7 @@ class UserProvider with ChangeNotifier {
     fetchUser();
   }
 
+  // ✅ Add user only if not exists
   Future<void> addUser(UserModel user) async {
     try {
       _isLoading = true;
@@ -34,16 +37,36 @@ class UserProvider with ChangeNotifier {
 
       await _firestore.collection('users').doc(user.userId).set(user.toJson());
       _currentUser = user;
+      userImage = user.profileImage;
 
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
-      _isLoading = false;
       _error = e.toString();
-      debugPrint('❌ Error adding user: $e');
+      debugPrint(' Error adding user: $e');
+    } finally {
+      _isLoading = false;
       notifyListeners();
-      rethrow;
     }
+  }
+
+  //  Get user by ID (used in auth provider before adding)
+  Future<UserModel?> getUserById(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      if (doc.exists && doc.data() != null) {
+        return UserModel.fromJson(doc.data()!);
+      }
+      return null;
+    } catch (e) {
+      debugPrint(' Error fetching user by ID: $e');
+      return null;
+    }
+  }
+
+  //  Set current user manually
+  void setCurrentUser(UserModel user) {
+    _currentUser = user;
+    userImage = user.profileImage;
+    notifyListeners();
   }
 
   Future<void> fetchUser() async {
@@ -70,16 +93,13 @@ class UserProvider with ChangeNotifier {
         _currentUser = null;
         _error = 'User document not found';
       }
-
-      _isLoading = false;
-      notifyListeners();
     } catch (e) {
-      _isLoading = false;
       _error = e.toString();
       _currentUser = null;
       debugPrint('❌ Error fetching user: $e');
+    } finally {
+      _isLoading = false;
       notifyListeners();
-      rethrow;
     }
   }
 
@@ -89,17 +109,10 @@ class UserProvider with ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      await _firestore
-          .collection('users')
-          .doc(user.userId)
-          .update(user.toJson());
-
+      await _firestore.collection('users').doc(user.userId).update(user.toJson());
       _currentUser = user;
-      _isLoading = false;
-      notifyListeners();
 
       MyCustomSnackBar.show(
-        // ignore: use_build_context_synchronously
         context: context,
         title: 'Success',
         message: 'User updated successfully',
@@ -107,29 +120,28 @@ class UserProvider with ChangeNotifier {
         backgroundColor: AppColors.green,
       );
     } catch (e) {
-      _isLoading = false;
       _error = e.toString();
-      notifyListeners();
 
       MyCustomSnackBar.show(
-        // ignore: use_build_context_synchronously
         context: context,
         title: 'Error',
         message: 'Failed to update user: $_error',
         icon: Icons.error,
         backgroundColor: AppColors.red,
       );
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  
   Future<String?> uploadImage(File image) async {
     try {
-      final uniqueFileName = _currentUser!.userId.toString();
+      if (_currentUser == null) return null;
+
+      final uniqueFileName = _currentUser!.userId;
       final ref = _storage.ref().child('images/$uniqueFileName');
 
-      // Upload the image
       final uploadTask = ref.putFile(image);
       final snapshot = await uploadTask.whenComplete(() {});
       final url = await snapshot.ref.getDownloadURL();
@@ -150,6 +162,7 @@ class UserProvider with ChangeNotifier {
     _currentUser = null;
     _error = null;
     _isLoading = false;
+    userImage = null;
     notifyListeners();
   }
 }

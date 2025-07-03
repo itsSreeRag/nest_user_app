@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/widgets/my_custom_snackbar.dart';
+import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
 
 class LocationProvider extends ChangeNotifier {
   String? city = '';

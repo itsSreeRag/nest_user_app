@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/models/review_rating_model.dart';
 import 'package:nest_user_app/services/review_rating_services.dart';
-import 'package:nest_user_app/widgets/my_custom_snackbar.dart';
+import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
 
 class ReviewRatingProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;

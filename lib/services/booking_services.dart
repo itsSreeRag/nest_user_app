@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -55,8 +54,6 @@ class BookingService {
         .toList();
   }
 
-  /// Checks room availability for a specific date range
-  /// Returns the number of available rooms for the given room type
   Future<int> checkRoomAvailability({
     required String hotelId,
     required String roomId,
@@ -65,7 +62,6 @@ class BookingService {
     required RoomModel roomData,
   }) async {
     try {
-      // Get total number of rooms available for this room type
       final totalRooms = int.tryParse(roomData.numberOfRooms) ?? 0;
 
       if (totalRooms <= 0) {
@@ -73,7 +69,6 @@ class BookingService {
         return 0;
       }
 
-      // Fetch all bookings for this hotel and room type that overlap with the requested dates
       final bookingsSnapshot =
           await _firestore
               .collection('hotels')
@@ -83,15 +78,13 @@ class BookingService {
               .where(
                 'bookingStatus',
                 isEqualTo: 'Booked',
-              ) // Only count active bookings
+              ) 
               .get();
 
       int bookedRooms = 0;
 
       for (var doc in bookingsSnapshot.docs) {
         final booking = BookingModel.fromJson(doc.data());
-
-        // Check if the booking dates overlap with the requested dates
         if (_datesOverlap(
           checkInDate,
           checkOutDate,
@@ -113,22 +106,15 @@ class BookingService {
       return 0;
     }
   }
-
-  /// Helper method to check if two date ranges overlap
   bool _datesOverlap(
     DateTime requestStart,
     DateTime requestEnd,
     DateTime bookingStart,
     DateTime bookingEnd,
   ) {
-    // Two date ranges overlap if:
-    // - Request start is before booking end AND
-    // - Request end is after booking start
     return requestStart.isBefore(bookingEnd) &&
         requestEnd.isAfter(bookingStart);
   }
-
-  /// Checks if sufficient rooms are available for the requested booking
   Future<bool> isBookingPossible({
     required String hotelId,
     required String roomId,
@@ -148,7 +134,6 @@ class BookingService {
     return availableRooms >= requestedRooms;
   }
 
-  /// Gets detailed availability information for a room
   Future<Map<String, dynamic>> getRoomAvailabilityDetails({
     required String hotelId,
     required String roomId,
@@ -173,5 +158,34 @@ class BookingService {
       'checkInDate': checkInDate.toIso8601String(),
       'checkOutDate': checkOutDate.toIso8601String(),
     };
+  }
+
+
+  Future<void> cancelBooking({
+    required String bookingId,
+    required String hotelId,
+  }) async {
+    final uid = currentUserId;
+
+    try {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .collection('bookings')
+          .doc(bookingId)
+          .update({'bookingStatus': 'Cancelled'});
+
+      await _firestore
+          .collection('hotels')
+          .doc(hotelId)
+          .collection('bookings')
+          .doc(bookingId)
+          .update({'bookingStatus': 'Cancelled'});
+
+      log('Booking $bookingId cancelled successfully.');
+    } catch (e) {
+      log('Error cancelling booking $bookingId: $e');
+      rethrow;
+    }
   }
 }

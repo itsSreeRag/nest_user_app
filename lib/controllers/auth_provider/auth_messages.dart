@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
-import '../../constants/colors.dart';
+import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
+
 
 class AuthMessages {
   static void showSuccess(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: AppColors.green,
-        content: Text(message),
-      ),
+    MyCustomSnackBar.show(
+      context: context,
+      title: 'Success',
+      message: message,
+      icon: Icons.check_circle,
+      backgroundColor: AppColors.green,
     );
   }
 
   static void showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: AppColors.red,
-        content: Text(message),
-      ),
+    MyCustomSnackBar.show(
+      context: context,
+      title: 'Error',
+      message: message,
+      icon: Icons.error,
+      backgroundColor: AppColors.red,
     );
   }
 }
+

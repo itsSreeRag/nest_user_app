@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/controllers/profile_provider/profile_provider.dart';
+import 'package:nest_user_app/controllers/profile_provider/user_provider.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/profile_details_main.dart';
 import 'package:provider/provider.dart';
 
