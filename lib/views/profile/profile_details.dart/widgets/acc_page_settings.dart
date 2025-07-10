@@ -3,6 +3,7 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/widgets/acc_page_tile_section.dart';
 import 'package:nest_user_app/views/profile/account_page_main.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/widgets/log_out_alert_box.dart';
+import 'package:nest_user_app/views/reports/reprot_showing_page/report_showing_page_main.dart';
 
 class AccPageSettings extends StatelessWidget {
   const AccPageSettings({super.key});
@@ -49,6 +50,21 @@ class AccPageSettings extends StatelessWidget {
             leadicon: Icons.file_copy,
             title: 'Terms&Conditions',
             subtitle: 'View terms of service',
+            trailicon: Icons.arrow_forward_ios,
+            color: AppColors.primary,
+          ),
+
+          TileSection(
+            ontap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ReportShowingPageMain(),
+                ),
+              );
+            },
+            leadicon: Icons.report,
+            title: 'My Reports',
+            subtitle: 'View submitted reports and status',
             trailicon: Icons.arrow_forward_ios,
             color: AppColors.primary,
           ),

@@ -10,7 +10,6 @@ import 'package:nest_user_app/models/booking_model.dart';
 import 'package:nest_user_app/models/hotel_models.dart';
 import 'package:nest_user_app/models/room_model.dart';
 import 'package:nest_user_app/services/booking_services.dart';
-import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
 
 class BookingProvider extends ChangeNotifier {
   final BookingService _bookingService = BookingService();
@@ -19,10 +18,10 @@ class BookingProvider extends ChangeNotifier {
   final BookingAmountCalculator _amountCalculator = BookingAmountCalculator();
   final BookingExecutor _executor = BookingExecutor();
 
-  List<BookingModel> _bookings = [];
+  List<BookingModel>? bookings ;
   bool _isLoading = false;
 
-  List<BookingModel> get bookings => _bookings;
+  // List<BookingModel>? get bookings => _bookings;
   bool get isLoading => _isLoading;
 
   int? get availableRooms => _availability.availableRooms;
@@ -88,9 +87,9 @@ class BookingProvider extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      _bookings = await _bookingService.fetchUserBookings();
+      bookings = await _bookingService.fetchUserBookings();
     } catch (e) {
-      _bookings = [];
+      bookings = [];
     } finally {
       _isLoading = false;
       notifyListeners();

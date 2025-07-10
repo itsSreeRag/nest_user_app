@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
@@ -14,7 +16,6 @@ class MySplashScreen extends StatelessWidget {
 
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
-        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
           builder:
@@ -27,7 +28,6 @@ class MySplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: use_build_context_synchronously
     Future.microtask(() => _navigateUser(context));
 
     return const Scaffold(

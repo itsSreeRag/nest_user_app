@@ -3,6 +3,7 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/review_rating_controller/review_rating_controller.dart';
 import 'package:nest_user_app/views/hotel_details/review_list.dart';
 import 'package:nest_user_app/views/hotel_details/widgets/review_report_card.dart';
+import 'package:nest_user_app/views/reports/report_page_main.dart';
 import 'package:nest_user_app/views/review_ratings/review_rating_main.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +59,15 @@ class HotelReviewReport extends StatelessWidget {
                       title: 'Report',
                       subtitle: 'Report an issue',
                       color: AppColors.red,
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => ReportPageMain(hotelId: hotelId),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

@@ -9,8 +9,13 @@ import 'package:nest_user_app/views/booking/booking_card/widgets/booking_locatio
 
 class BookingsCard extends StatelessWidget {
   final BookingModel booking;
+  final bool cancelBooking;
 
-  const BookingsCard({super.key, required this.booking});
+  const BookingsCard({
+    super.key,
+    required this.booking,
+    required this.cancelBooking,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +56,7 @@ class BookingsCard extends StatelessWidget {
                 children: booking.children,
               ),
               const SizedBox(height: 24),
-              if (booking.bookingStatus == 'Booked')
-                CancelButton(booking: booking),
+              if (cancelBooking) CancelButton(booking: booking),
             ],
           ),
         ),

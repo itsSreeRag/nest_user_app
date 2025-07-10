@@ -17,6 +17,7 @@ import 'package:nest_user_app/controllers/location_provider/location_provider.da
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
 import 'package:nest_user_app/controllers/page_controller_provider.dart';
 import 'package:nest_user_app/controllers/profile_provider/user_provider.dart';
+import 'package:nest_user_app/controllers/reprot_provider/report_provider.dart';
 import 'package:nest_user_app/controllers/review_rating_controller/review_rating_controller.dart';
 import 'package:nest_user_app/controllers/room_provider/room_detail_image_provider.dart';
 import 'package:nest_user_app/controllers/room_provider/room_provider.dart';
@@ -26,7 +27,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await dotenv.load();
   // log(dotenv.env.toString());
   await Firebase.initializeApp();
@@ -36,7 +37,6 @@ void main() async {
 
 Future<void> _setup() async {
   Stripe.publishableKey = StripeKeys.publishableKey;
-
 }
 
 class MyApp extends StatelessWidget {
@@ -62,7 +62,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PageControllerProvider()),
         ChangeNotifierProvider(create: (_) => PersonCountProvider()),
         ChangeNotifierProvider(create: (_) => LocationProvider()),
-        ChangeNotifierProvider(create: (context) => ReviewRatingProvider(),)
+        ChangeNotifierProvider(create: (context) => ReviewRatingProvider()),
+        ChangeNotifierProvider(create: (_) => ReportProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

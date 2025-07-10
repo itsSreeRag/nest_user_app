@@ -18,13 +18,6 @@ class HotelProvider with ChangeNotifier {
 
   Timer? _debouncer;
 
-Future<void>? _initFuture;
-Future<void> get initFuture => _initFuture ??= _initialize();
-
-Future<void> _initialize() async {
-  await fetchHotels();
-  // add other async logic if needed
-}
 
   // Fetch hotels from Firebase
 Future<void> fetchHotels() async {

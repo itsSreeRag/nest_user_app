@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/controllers/animation_provider/home_animation.dart';
 import 'package:provider/provider.dart';

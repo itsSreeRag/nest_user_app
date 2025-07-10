@@ -33,67 +33,72 @@ class BookingPageMain extends StatelessWidget {
         ),
         body: Consumer<BookingProvider>(
           builder: (context, provider, _) {
-            // if (provider.bookings.isEmpty && !provider.isLoading) {
-            //   WidgetsBinding.instance.addPostFrameCallback((_) {
-            //     provider.fetchBookings();
-            //   });
-            // }
-
-            if (provider.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            final now = DateTime.now();
-            final today = DateTime(now.year, now.month, now.day);
-
-            final upcoming =
-                provider.bookings.where((b) {
-                  final checkOut = DateTime(
-                    b.checkOutDate.year,
-                    b.checkOutDate.month,
-                    b.checkOutDate.day,
-                  );
-
-                  return b.bookingStatus == 'Booked' && checkOut.isAfter(today);
-                }).toList();
-
-            final completed =
-                provider.bookings.where((b) {
-                  final checkOut = DateTime(
-                    b.checkOutDate.year,
-                    b.checkOutDate.month,
-                    b.checkOutDate.day,
-                  );
-
-                  return b.bookingStatus == 'Booked' &&
-                      checkOut.isBefore(today);
-                }).toList();
-
-            final cancelled =
-                provider.bookings
-                    .where((b) => b.bookingStatus == 'Cancelled')
-                    .toList();
-
-            return RefreshIndicator(
-              onRefresh: () async {
+            if (provider.bookings == null && !provider.isLoading) {
+              WidgetsBinding.instance.addPostFrameCallback((_) async {
                 await provider.fetchBookings();
-              },
-              child: TabBarView(
-                children: [
-                  _buildBookingList(context, upcoming, 'No upcoming bookings.'),
-                  _buildBookingList(
-                    context,
-                    completed,
-                    'No completed bookings.',
-                  ),
-                  _buildBookingList(
-                    context,
-                    cancelled,
-                    'No cancelled bookings.',
-                  ),
-                ],
-              ),
-            );
+              });
+            } else if (provider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              final now = DateTime.now();
+              final today = DateTime(now.year, now.month, now.day);
+
+              final upcoming =
+                  provider.bookings!.where((b) {
+                    final checkOut = DateTime(
+                      b.checkOutDate.year,
+                      b.checkOutDate.month,
+                      b.checkOutDate.day,
+                    );
+
+                    return b.bookingStatus == 'Booked' &&
+                        checkOut.isAfter(today);
+                  }).toList();
+
+              final completed =
+                  provider.bookings!.where((b) {
+                    final checkOut = DateTime(
+                      b.checkOutDate.year,
+                      b.checkOutDate.month,
+                      b.checkOutDate.day,
+                    );
+
+                    return b.bookingStatus == 'Booked' &&
+                        checkOut.isBefore(today);
+                  }).toList();
+
+              final cancelled =
+                  provider.bookings!
+                      .where((b) => b.bookingStatus == 'Cancelled')
+                      .toList();
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await provider.fetchBookings();
+                },
+                child: TabBarView(
+                  children: [
+                    _buildBookingList(
+                      context,
+                      upcoming,
+                      'No upcoming bookings.',
+                      cancelButton: true,
+                    ),
+                    _buildBookingList(
+                      context,
+                      completed,
+                      'No completed bookings.',
+                    ),
+                    _buildBookingList(
+                      context,
+                      cancelled,
+                      'No cancelled bookings.',
+                    ),
+                  ],
+                ),
+              );
+            }
+            return Container();
           },
         ),
       ),
@@ -103,8 +108,9 @@ class BookingPageMain extends StatelessWidget {
   Widget _buildBookingList(
     BuildContext context,
     List bookings,
-    String emptyMsg,
-  ) {
+    String emptyMsg, {
+    bool cancelButton = false,
+  }) {
     if (bookings.isEmpty) {
       return Center(
         child: Column(
@@ -136,7 +142,7 @@ class BookingPageMain extends StatelessWidget {
                 ),
               );
             },
-            child: BookingsCard(booking: booking),
+            child: BookingsCard(booking: booking, cancelBooking: cancelButton),
           );
         },
       ),

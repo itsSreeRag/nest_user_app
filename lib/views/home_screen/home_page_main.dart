@@ -17,11 +17,14 @@ class HomeScreenMain extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hotelProvider = Provider.of<HotelProvider>(context, listen: false);
-    final favoriteProvider = Provider.of<FavoriteProvider>(context, listen: false);
+    final favoriteProvider = Provider.of<FavoriteProvider>(
+      context,
+      listen: false,
+    );
 
     return FutureBuilder(
       future: Future.wait([
-         hotelProvider.initFuture,
+        hotelProvider.fetchHotels(),
         favoriteProvider.initFuture,
       ]),
       builder: (context, snapshot) {
@@ -33,44 +36,68 @@ class HomeScreenMain extends StatelessWidget {
           return Center(child: Text('Error: ${snapshot.error}'));
         }
 
-        return Consumer<HomeAnimationProvider>(
-          builder: (context, animProvider, _) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 30,),
-                    HomeLocationDetails(),
-                    HomePageSearchBar(onChanged: (value) {}),
-                    SlideFadeAnimation(
-                      trigger: animProvider.showSearchByCity,
-                      beginOffset: const Offset(0.2, 0),
-                      child: HomeOfferCarousel(),
-                    ),
-                    SlideFadeAnimation(
-                      trigger: animProvider.showNearHotels,
-                      beginOffset: const Offset(0, 0.2),
-                      child: HomeSearchByCity(),
-                    ),
-                    SlideFadeAnimation(
-                      trigger: animProvider.showRatedHotels,
-                      beginOffset: const Offset(0.2, 0),
-                      child: HomePageNearHotels(),
-                    ),
-                    SlideFadeAnimation(
-                      trigger: animProvider.showRatedHotels,
-                      beginOffset: const Offset(0, 0.2),
-                      child: SuggestedHotels(),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+        return const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: SingleChildScrollView(child: _HomeContentWithConsumers()),
         );
       },
+    );
+  }
+}
+
+class _HomeContentWithConsumers extends StatelessWidget {
+  const _HomeContentWithConsumers();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 30),
+        const HomeLocationDetails(),
+        HomePageSearchBar(onChanged: (value) {}),
+
+        // Show Offers Carousel
+        Consumer<HomeAnimationProvider>(
+          builder:
+              (context, anim, _) => SlideFadeAnimation(
+                trigger: anim.showSearchByCity,
+                beginOffset: const Offset(0.2, 0),
+                child: const HomeOfferCarousel(),
+              ),
+        ),
+
+        // Show Search by City
+        Consumer<HomeAnimationProvider>(
+          builder:
+              (context, anim, _) => SlideFadeAnimation(
+                trigger: anim.showNearHotels,
+                beginOffset: const Offset(0, 0.2),
+                child: const HomeSearchByCity(),
+              ),
+        ),
+
+        // Show Nearby Hotels
+        Consumer<HomeAnimationProvider>(
+          builder:
+              (context, anim, _) => SlideFadeAnimation(
+                trigger: anim.showRatedHotels,
+                beginOffset: const Offset(0.2, 0),
+                child: const HomePageNearHotels(),
+              ),
+        ),
+
+        // Show Suggested Hotels
+        Consumer<HomeAnimationProvider>(
+          builder:
+              (context, anim, _) => SlideFadeAnimation(
+                trigger: anim.showRatedHotels,
+                beginOffset: const Offset(0, 0.2),
+                child: const SuggestedHotels(),
+              ),
+        ),
+        SizedBox(height: 80),
+      ],
     );
   }
 }

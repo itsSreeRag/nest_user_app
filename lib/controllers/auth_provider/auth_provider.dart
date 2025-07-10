@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,30 +11,31 @@ import 'package:nest_user_app/views/navigation_bar/navigation_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class MyAuthProviders with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  String? _errorMessage;
-  User? _user;
+  String? errorMessage;
+  User? user;
   bool showOtpField = false;
   String? verificationId;
 
-  String? get errorMessage => _errorMessage;
-  User? get user => _user;
+  Future<bool> checkUserLogin() async {
+    final sharedpref = await SharedPreferences.getInstance();
+    final result = sharedpref.getBool('isLoggedIn') ?? false;
+    return result;
+  }
 
-  // Check if user is already logged in
-  Future<bool> checkUserLogin() async =>
-      (await SharedPreferences.getInstance()).getBool('isLoggedIn') ?? false;
+  Future<void> saveUserLoggedIn() async {
+    final sharedpref = await SharedPreferences.getInstance();
+    sharedpref.setBool('isLoggedIn', true);
+  }
 
-  Future<void> saveUserLoggedIn() async =>
-      (await SharedPreferences.getInstance()).setBool('isLoggedIn', true);
 
   Future<void> logout(BuildContext context) async {
     await _googleSignIn.signOut();
     await _auth.signOut();
-    _user = null;
+    user = null;
     notifyListeners();
     AuthMessages.showSuccess(context, 'LogOut successful');
 
@@ -59,11 +59,11 @@ class MyAuthProviders with ChangeNotifier {
       );
 
       final userCredential = await _auth.signInWithCredential(credential);
-      _user = userCredential.user;
+      user = userCredential.user;
       notifyListeners();
 
-      if (_user != null) {
-        await _saveUserToFirestore(context, _user!);
+      if (user != null) {
+        await _saveUserToFirestore(context, user!);
         AuthMessages.showSuccess(context, 'Google Sign-In Successful');
         Navigator.pushReplacement(
           context,
@@ -79,27 +79,38 @@ class MyAuthProviders with ChangeNotifier {
     }
   }
 
-  Future<bool> createAccount(String email, String password, BuildContext context) async {
+  Future<bool> createAccount(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      _user = _auth.currentUser;
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      user = _auth.currentUser;
       notifyListeners();
 
-      if (_user != null) {
-        await _saveUserToFirestore(context, _user!);
+      if (user != null) {
+        await _saveUserToFirestore(context, user!);
         AuthMessages.showSuccess(context, 'Account Created Successfully');
       }
 
       return true;
     } on FirebaseAuthException catch (e) {
-      _errorMessage = AuthHelpers.getRegisterErrorMessage(e);
+      errorMessage = AuthHelpers.getRegisterErrorMessage(e);
       notifyListeners();
-      AuthMessages.showError(context, _errorMessage!);
+      AuthMessages.showError(context, errorMessage!);
       return false;
     }
   }
 
-  Future<void> loginAccount(String email, String password, BuildContext context) async {
+  Future<void> loginAccount(
+    String email,
+    String password,
+    BuildContext context,
+  ) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       Navigator.pushAndRemoveUntil(
@@ -115,14 +126,17 @@ class MyAuthProviders with ChangeNotifier {
     }
   }
 
-  void sendOTP(BuildContext context, TextEditingController phoneController) async {
+  void sendOTP(
+    BuildContext context,
+    TextEditingController phoneController,
+  ) async {
     final phone = '+91${phoneController.text.trim()}';
     try {
       await _auth.verifyPhoneNumber(
         phoneNumber: phone,
         verificationCompleted: (credential) async {
           await _auth.signInWithCredential(credential);
-          _user = _auth.currentUser;
+          user = _auth.currentUser;
           notifyListeners();
           AuthMessages.showSuccess(context, 'Auto verification successful!');
           Navigator.pushReplacement(
@@ -130,7 +144,11 @@ class MyAuthProviders with ChangeNotifier {
             MaterialPageRoute(builder: (context) => const MyNavigationBar()),
           );
         },
-        verificationFailed: (e) => AuthMessages.showError(context, 'Verification failed: ${e.message}'),
+        verificationFailed:
+            (e) => AuthMessages.showError(
+              context,
+              'Verification failed: ${e.message}',
+            ),
         codeSent: (id, _) {
           verificationId = id;
           showOtpField = true;
@@ -143,7 +161,10 @@ class MyAuthProviders with ChangeNotifier {
     }
   }
 
-  Future<void> verifyOTP(BuildContext context, TextEditingController otpController) async {
+  Future<void> verifyOTP(
+    BuildContext context,
+    TextEditingController otpController,
+  ) async {
     try {
       if (verificationId == null) {
         AuthMessages.showError(context, 'No OTP request found.');
@@ -157,11 +178,11 @@ class MyAuthProviders with ChangeNotifier {
       );
 
       await _auth.signInWithCredential(credential);
-      _user = _auth.currentUser;
+      user = _auth.currentUser;
       notifyListeners();
 
-      if (_user != null) {
-        await _saveUserToFirestore(context, _user!);
+      if (user != null) {
+        await _saveUserToFirestore(context, user!);
         AuthMessages.showSuccess(context, 'OTP Verified Successfully!');
         Navigator.pushReplacement(
           context,
@@ -179,26 +200,24 @@ class MyAuthProviders with ChangeNotifier {
   }
 
   Future<void> _saveUserToFirestore(BuildContext context, User user) async {
-  final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-  // Check if user already exists in Firestore
-  final existingUser = await userProvider.getUserById(user.uid);
+    // Check if user already exists in Firestore
+    final existingUser = await userProvider.getUserById(user.uid);
 
-  if (existingUser == null) {
-    final userModel = UserModel(
-      userId: user.uid,
-      name: user.displayName ?? '',
-      email: user.email ?? '',
-      phoneNumber: user.phoneNumber ?? '',
-      gender: '',
-      profileImage: user.photoURL,
-    );
+    if (existingUser == null) {
+      final userModel = UserModel(
+        userId: user.uid,
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+        phoneNumber: user.phoneNumber ?? '',
+        gender: '',
+        profileImage: user.photoURL,
+      );
 
-    await userProvider.addUser(userModel);
-  } else {
-    // Optionally update the userProvider with the existing user
-    userProvider.setCurrentUser(existingUser); // if you have such a method
+      await userProvider.addUser(userModel);
+    } else {
+      userProvider.setCurrentUser(existingUser);
+    }
   }
-}
-
 }

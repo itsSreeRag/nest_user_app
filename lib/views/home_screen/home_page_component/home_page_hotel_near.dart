@@ -27,7 +27,6 @@ class HomePageNearHotels extends StatelessWidget {
                     locationProvider.city!.toLowerCase().trim();
               }).toList();
         } else {
-          // No location, show all hotels
           filteredHotels = hotelProvider.hotels;
         }
 
