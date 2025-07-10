@@ -91,7 +91,10 @@ class MyCustomSnackBar {
                   ),
                   IconButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      // Check if the context is still valid before using it
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      }
                     },
                     icon: Icon(
                       Icons.close_rounded,
@@ -109,6 +112,8 @@ class MyCustomSnackBar {
       behavior: SnackBarBehavior.floating,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
