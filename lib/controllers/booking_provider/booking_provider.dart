@@ -121,7 +121,7 @@ class BookingProvider extends ChangeNotifier {
     }
   }
 
-  void clear() {
+  void clearBooking() {
     bookings = null;
     isLoading = false;
     availability.clear();

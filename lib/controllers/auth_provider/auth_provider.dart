@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_helpers.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_messages.dart';
+import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
+import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
 import 'package:nest_user_app/controllers/user_provider/user_provider.dart';
 import 'package:nest_user_app/models/user_model.dart';
@@ -43,7 +45,12 @@ class MyAuthProviders with ChangeNotifier {
     AuthMessages.showSuccess(context, 'Logout successful');
     (await SharedPreferences.getInstance()).setBool('isLoggedIn', false);
     Provider.of<UserProvider>(listen: false, context).clearUser();
-    Provider.of<NavigationBarProvider>(context,listen: false,).clearNavidationBar();
+    Provider.of<NavigationBarProvider>(
+      context,
+      listen: false,
+    ).clearNavidationBar();
+    Provider.of<BookingProvider>(context, listen: false).clearBooking();
+    Provider.of<FavoriteProvider>(context, listen: false).clearSaved();
 
     // Navigate to login page
     Navigator.pushAndRemoveUntil(

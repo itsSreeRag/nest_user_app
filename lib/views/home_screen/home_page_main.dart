@@ -25,7 +25,7 @@ class HomeScreenMain extends StatelessWidget {
     return FutureBuilder(
       future: Future.wait([
         hotelProvider.fetchHotels(),
-        favoriteProvider.initFuture,
+        favoriteProvider.initialize(),
       ]),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

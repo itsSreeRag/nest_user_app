@@ -7,15 +7,12 @@ import 'package:nest_user_app/widgets/my_custom_snack_bar.dart';
 
 class FavoriteProvider with ChangeNotifier {
   final FavoriteService _favoriteService = FavoriteService();
-  List<String> _favoriteHotelIds = [];
-  List<String> get favoriteHotelIds => _favoriteHotelIds;
+  List<String> favoriteHotelIds = [];
+  // List<String> get favoriteHotelIds => _favoriteHotelIds;
 
   bool isLoading = false;
   bool _hasLoaded = false;
   bool _isInitializing = false;
-
-  Future<void>? _initFuture;
-  Future<void> get initFuture => _initFuture ??= initialize();
 
   Future<void> initialize() async {
     if (!_hasLoaded && !_isInitializing) {
@@ -34,7 +31,7 @@ class FavoriteProvider with ChangeNotifier {
     });
 
     try {
-      _favoriteHotelIds = await _favoriteService.getFavoriteHotelIds();
+      favoriteHotelIds = await _favoriteService.getFavoriteHotelIds();
       _hasLoaded = true;
     } catch (e) {
       // Handle or log error
@@ -46,7 +43,7 @@ class FavoriteProvider with ChangeNotifier {
   }
 
   bool isFavorite(String hotelId) {
-    return _favoriteHotelIds.contains(hotelId);
+    return favoriteHotelIds.contains(hotelId);
   }
 
   Future<void> toggleFavorite(String hotelId, BuildContext context) async {
@@ -54,7 +51,7 @@ class FavoriteProvider with ChangeNotifier {
       await loadFavorites();
     }
 
-    if (_favoriteHotelIds.contains(hotelId)) {
+    if (favoriteHotelIds.contains(hotelId)) {
       await _favoriteService.removeFavorite(hotelId);
       MyCustomSnackBar.show(
         context: context,
@@ -64,7 +61,7 @@ class FavoriteProvider with ChangeNotifier {
         accentColor: AppColors.white,
       );
 
-      _favoriteHotelIds.remove(hotelId);
+      favoriteHotelIds.remove(hotelId);
     } else {
       await _favoriteService.addFavorite(hotelId);
       MyCustomSnackBar.show(
@@ -74,7 +71,7 @@ class FavoriteProvider with ChangeNotifier {
         backgroundColor: AppColors.green,
         accentColor: AppColors.white,
       );
-      _favoriteHotelIds.add(hotelId);
+      favoriteHotelIds.add(hotelId);
     }
     notifyListeners();
   }
@@ -82,5 +79,13 @@ class FavoriteProvider with ChangeNotifier {
   Future<void> refreshFavorites() async {
     _hasLoaded = false;
     await loadFavorites();
+  }
+
+  void clearSaved() {
+    favoriteHotelIds = [];
+    isLoading = false;
+    _hasLoaded = false;
+    _isInitializing = false;
+    notifyListeners();
   }
 }
