@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/models/booking_model.dart';
 import 'package:nest_user_app/models/hotel_models.dart';

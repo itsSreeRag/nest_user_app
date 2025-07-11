@@ -16,7 +16,7 @@ import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
 import 'package:nest_user_app/controllers/location_provider/location_provider.dart';
 import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar_provider.dart';
 import 'package:nest_user_app/controllers/page_controller_provider.dart';
-import 'package:nest_user_app/controllers/profile_provider/user_provider.dart';
+import 'package:nest_user_app/controllers/user_provider/user_provider.dart';
 import 'package:nest_user_app/controllers/reprot_provider/report_provider.dart';
 import 'package:nest_user_app/controllers/review_rating_controller/review_rating_controller.dart';
 import 'package:nest_user_app/controllers/room_provider/room_detail_image_provider.dart';

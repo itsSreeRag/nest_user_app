@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class MySplashScreen extends StatelessWidget {
   const MySplashScreen({super.key});
 
-  void _navigateUser(BuildContext context) async {
+  void navigateUser(BuildContext context) async {
     final authProvider = Provider.of<MyAuthProviders>(context, listen: false);
     bool isLoggedIn = await authProvider.checkUserLogin();
 
@@ -28,7 +28,7 @@ class MySplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.microtask(() => _navigateUser(context));
+    Future.microtask(() => navigateUser(context));
 
     return const Scaffold(
       body: SafeArea(

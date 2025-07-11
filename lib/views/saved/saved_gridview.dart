@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/views/hotel_details/hotel_details_main.dart';
@@ -24,7 +25,19 @@ class SavedHotelsGrid extends StatelessWidget {
     }
 
     if (favoriteHotels.isEmpty) {
-      return const Center(child: Text('No favorite hotels found.'));
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.bookmark_border, size: 64, color:  AppColors.grey400),
+            const SizedBox(height: 16),
+            Text(
+              'No saved hotels yet',
+              style: TextStyle(fontSize: 16, color: AppColors.grey600),
+            ),
+          ],
+        ),
+      );
     }
 
     return GridView.builder(

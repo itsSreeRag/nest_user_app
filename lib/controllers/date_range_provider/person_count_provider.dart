@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class PersonCountProvider extends ChangeNotifier {
-  int _adultCount = 1; // Default to 1 adult
+  int _adultCount = 1; 
   int _childrenCount = 0;
 
   int get adultCount => _adultCount;
@@ -15,7 +15,6 @@ class PersonCountProvider extends ChangeNotifier {
 
   void decrementAdults() {
     if (_adultCount > 1) {
-      // Ensure at least 1 adult
       _adultCount--;
       notifyListeners();
     }

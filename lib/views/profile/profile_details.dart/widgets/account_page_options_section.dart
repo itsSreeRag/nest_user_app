@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/views/profile/profile_details.dart/widgets/acc_page_more_options.dart';
-import 'package:nest_user_app/views/profile/profile_details.dart/widgets/acc_page_settings.dart';
+import 'package:nest_user_app/views/profile/profile_details.dart/acc_page_more_options.dart';
+import 'package:nest_user_app/views/profile/profile_details.dart/acc_page_settings.dart';
 
 class AccountPageOptions extends StatelessWidget {
   const AccountPageOptions({super.key});

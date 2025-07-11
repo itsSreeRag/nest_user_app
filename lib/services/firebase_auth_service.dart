@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  User? get currentUser => _auth.currentUser;
+  User? get currentUser => auth.currentUser;
 
   Future<User?> signInWithGoogle() async {
     final googleUser = await _googleSignIn.signIn();
@@ -16,26 +16,26 @@ class FirebaseAuthService {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final userCredential = await _auth.signInWithCredential(credential);
+    final userCredential = await auth.signInWithCredential(credential);
     return userCredential.user;
   }
 
   Future<User?> registerWithEmail(String email, String password) async {
-    final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    final credential = await auth.createUserWithEmailAndPassword(email: email, password: password);
     return credential.user;
   }
 
   Future<void> loginWithEmail(String email, String password) async {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
+    await auth.signInWithEmailAndPassword(email: email, password: password);
   }
 
   Future<void> sendPasswordReset(String email) async {
-    await _auth.sendPasswordResetEmail(email: email);
+    await auth.sendPasswordResetEmail(email: email);
   }
 
   Future<void> signOut() async {
     await _googleSignIn.signOut();
-    await _auth.signOut();
+    await auth.signOut();
   }
 
   Future<void> verifyPhone({
@@ -45,7 +45,7 @@ class FirebaseAuthService {
     required Function(String verificationId, int? resendToken) onCodeSent,
     required Function(String) onCodeAutoRetrievalTimeout,
   }) async {
-    await _auth.verifyPhoneNumber(
+    await auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: onVerificationCompleted,
       verificationFailed: onVerificationFailed,
@@ -59,7 +59,7 @@ class FirebaseAuthService {
       verificationId: verificationId,
       smsCode: smsCode,
     );
-    final userCredential = await _auth.signInWithCredential(credential);
+    final userCredential = await auth.signInWithCredential(credential);
     return userCredential.user;
   }
 }

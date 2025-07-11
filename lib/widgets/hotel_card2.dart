@@ -28,9 +28,6 @@ class HotelCard2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favoriteProvider = Provider.of<FavoriteProvider>(context);
-    final isFav = favoriteProvider.isFavorite(hotelId);
-
     return Container(
       width: double.infinity,
       height: 160,
@@ -69,39 +66,6 @@ class HotelCard2 extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                // Rating badge
-                // Positioned(
-                //   top: 12,
-                //   left: 12,
-                //   child: Container(
-                //     padding: const EdgeInsets.symmetric(
-                //       horizontal: 8,
-                //       vertical: 4,
-                //     ),
-                //     decoration: BoxDecoration(
-                //       color: AppColors.black.withAlpha(153),
-                //       borderRadius: BorderRadius.circular(16),
-                //     ),
-                //     child: Row(
-                //       children: [
-                //         const Icon(
-                //           Icons.star_rounded,
-                //           color: AppColors.secondary,
-                //           size: 16,
-                //         ),
-                //         const SizedBox(width: 4),
-                //         Text(
-                //           rating.toString(),
-                //           style: const TextStyle(
-                //             color: AppColors.white,
-                //             fontSize: 12,
-                //             fontWeight: FontWeight.bold,
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
               ],
             ),
 
@@ -208,28 +172,33 @@ class HotelCard2 extends StatelessWidget {
                         ),
 
                         // Favorite button
-                        InkWell(
-                          onTap: () {
-                            favoriteProvider.toggleFavorite(hotelId,context);
-                          },
-                          child: Container(
-                            width: 38,
-                            height: 38,
-                            decoration: BoxDecoration(
-                              color:
+                        Consumer<FavoriteProvider>(
+                          builder: (context,favoriteProvider,_) {
+                            final isFav = favoriteProvider.isFavorite(hotelId);
+                            return InkWell(
+                              onTap: () {
+                                favoriteProvider.toggleFavorite(hotelId,context);
+                              },
+                              child: Container(
+                                width: 38,
+                                height: 38,
+                                decoration: BoxDecoration(
+                                  color:
+                                      isFav
+                                          ? AppColors.red.withAlpha(50)
+                                          : AppColors.grey.withAlpha(50),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Icon(
                                   isFav
-                                      ? AppColors.red.withAlpha(50)
-                                      : AppColors.grey.withAlpha(50),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Icon(
-                              isFav
-                                  ? Icons.favorite_rounded
-                                  : Icons.favorite_outline_rounded,
-                              color: isFav ? Colors.red : Colors.grey.shade600,
-                              size: 20,
-                            ),
-                          ),
+                                      ? Icons.favorite_rounded
+                                      : Icons.favorite_outline_rounded,
+                                  color: isFav ? Colors.red : Colors.grey.shade600,
+                                  size: 20,
+                                ),
+                              ),
+                            );
+                          }
                         ),
                       ],
                     ),

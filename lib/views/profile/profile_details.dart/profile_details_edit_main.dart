@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
-import 'package:nest_user_app/controllers/profile_provider/user_provider.dart';
+import 'package:nest_user_app/controllers/user_provider/user_provider.dart';
 import 'package:nest_user_app/models/user_model.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/widgets/profile_image_picker.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
@@ -36,8 +36,7 @@ class ProfileDetailsMain extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.white,
       ),
-      body: SingleChildScrollView
-      (
+      body: SingleChildScrollView(
         child: SafeArea(
           child: SizedBox(
             width: double.infinity,
@@ -51,15 +50,17 @@ class ProfileDetailsMain extends StatelessWidget {
                     children: [
                       Consumer<AddImageProvider>(
                         builder: (context, value, child) {
-                          return (userData.userImage!.isNotEmpty)
-                              ? CircleAvatar(
-                                backgroundImage:
-                                    (imageProvider.image == null)
+                          return CircleAvatar(
+                            backgroundImage:
+                                imageProvider.image == null
+                                    ? userData.userImage != null
                                         ? NetworkImage(userData.userImage!)
-                                        : FileImage(imageProvider.image!),
-                                radius: 80,
-                              )
-                              : Container();
+                                        : AssetImage(
+                                          'assets/images/images_1.jpg',
+                                        )
+                                    : FileImage(imageProvider.image!),
+                            radius: 80,
+                          );
                         },
                       ),
                       Positioned(
@@ -98,7 +99,7 @@ class ProfileDetailsMain extends StatelessWidget {
                         validator: myAppValidators.validateEmail,
                       ),
                       SizedBox(height: 10),
-        
+
                       MyCustomTextFormField(
                         prefixIcon: Icons.email,
                         controller: emailController,
@@ -106,16 +107,16 @@ class ProfileDetailsMain extends StatelessWidget {
                         validator: myAppValidators.validateEmail,
                       ),
                       SizedBox(height: 10),
-        
+
                       MyCustomTextFormField(
                         controller: phoneNumController,
                         prefixIcon: Icons.phone_android,
                         hintText: 'Enter The phone Number',
                         validator: myAppValidators.validateEmail,
                       ),
-        
+
                       SizedBox(height: 50),
-        
+
                       MyCustomButton(
                         width: double.infinity,
                         onPressed: () async {
@@ -125,7 +126,7 @@ class ProfileDetailsMain extends StatelessWidget {
                               imageProvider.image!,
                             );
                           }
-        
+
                           await userData.updateUser(
                             UserModel(
                               userId: userData.currentUser!.userId,

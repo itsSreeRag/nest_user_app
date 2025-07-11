@@ -7,14 +7,14 @@ import 'package:nest_user_app/services/hotel_firebase_services.dart';
 class HotelProvider with ChangeNotifier {
   final HotelService _hotelService = HotelService();
 
-  List<HotelModel> _hotels = [];
-  List<HotelModel> get hotels => _hotels;
+  List<HotelModel> hotels = [];
+  // List<HotelModel> get hotels => _hotels;
 
-  List<HotelModel> _filteredHotels = [];
-  List<HotelModel> get filteredHotels => _filteredHotels;
+  List<HotelModel> filteredHotels = [];
+  // List<HotelModel> get filteredHotels => _filteredHotels;
 
-  bool _isLoading = true;
-  bool get isLoading => _isLoading;
+  bool isLoading = true;
+  // bool get isLoading => isLoading;
 
   Timer? _debouncer;
 
@@ -22,20 +22,20 @@ class HotelProvider with ChangeNotifier {
   // Fetch hotels from Firebase
 Future<void> fetchHotels() async {
   Future.microtask(() {
-    _isLoading = true;
+    isLoading = true;
     notifyListeners();
   });
 
   try {
-    _hotels = await _hotelService.fetchApprovedHotels();
-    _filteredHotels = _hotels;
+    hotels = await _hotelService.fetchApprovedHotels();
+    filteredHotels = hotels;
   } catch (e) {
     log("Error fetching hotels: $e");
-    _hotels = [];
-    _filteredHotels = [];
+    hotels = [];
+    filteredHotels = [];
   }
 
-  _isLoading = false;
+  isLoading = false;
   notifyListeners();
 }
 
@@ -46,11 +46,11 @@ Future<void> fetchHotels() async {
 
     _debouncer = Timer(const Duration(milliseconds: 500), () {
       if (query.isEmpty) {
-        _filteredHotels = _hotels;
+        filteredHotels = hotels;
       } else {
         final lowerQuery = query.toLowerCase();
-        _filteredHotels =
-            _hotels.where((hotel) {
+        filteredHotels =
+            hotels.where((hotel) {
               final nameLower = hotel.stayName.toLowerCase();
               final cityLower = hotel.city.toLowerCase();
               return nameLower.contains(lowerQuery) ||
@@ -63,7 +63,7 @@ Future<void> fetchHotels() async {
 
   // Sort hotels by price: Low to High
   void sortHotelsByPriceAscending() {
-    _filteredHotels.sort((a, b) {
+    filteredHotels.sort((a, b) {
       final priceA = double.tryParse(a.basePrice) ?? 0;
       final priceB = double.tryParse(b.basePrice) ?? 0;
       return priceA.compareTo(priceB);
@@ -73,7 +73,7 @@ Future<void> fetchHotels() async {
 
   // Sort hotels by price: High to Low
   void sortHotelsByPriceDescending() {
-    _filteredHotels.sort((a, b) {
+    filteredHotels.sort((a, b) {
       final priceA = double.tryParse(a.basePrice) ?? 0;
       final priceB = double.tryParse(b.basePrice) ?? 0;
       return priceB.compareTo(priceA);
@@ -82,14 +82,14 @@ Future<void> fetchHotels() async {
   }
 
   void clearSearch() {
-    _filteredHotels = _hotels;
+    filteredHotels = hotels;
     notifyListeners();
   }
 
   // New method to clear both search results and text field
   void clearSearchAndText(TextEditingController controller) {
     controller.clear();
-    _filteredHotels = _hotels;
+    filteredHotels = hotels;
     notifyListeners();
   }
 

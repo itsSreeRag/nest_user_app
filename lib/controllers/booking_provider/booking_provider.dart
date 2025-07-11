@@ -10,27 +10,25 @@ import 'package:nest_user_app/models/booking_model.dart';
 import 'package:nest_user_app/models/hotel_models.dart';
 import 'package:nest_user_app/models/room_model.dart';
 import 'package:nest_user_app/services/booking_services.dart';
+import 'package:provider/provider.dart';
 
 class BookingProvider extends ChangeNotifier {
-  final BookingService _bookingService = BookingService();
+  final BookingService bookingService = BookingService();
 
-  final BookingAvailability _availability = BookingAvailability();
-  final BookingAmountCalculator _amountCalculator = BookingAmountCalculator();
-  final BookingExecutor _executor = BookingExecutor();
+  final BookingAvailability availability = BookingAvailability();
+  final BookingAmountCalculator amountCalculator = BookingAmountCalculator();
+  final BookingExecutor executor = BookingExecutor();
 
-  List<BookingModel>? bookings ;
-  bool _isLoading = false;
+  List<BookingModel>? bookings;
+  bool isLoading = false;
 
-  // List<BookingModel>? get bookings => _bookings;
-  bool get isLoading => _isLoading;
+  int? get availableRooms => availability.availableRooms;
+  int? get totalAmount => amountCalculator.amount;
+  bool get isCheckingAvailability => availability.isCheckingAvailability;
 
-  int? get availableRooms => _availability.availableRooms;
-  int? get totalAmount => _amountCalculator.amount;
-  bool get isCheckingAvailability => _availability.isCheckingAvailability;
-
-  DateTime? get checkInDate => _amountCalculator.checkInDate;
-  DateTime? get checkOutDate => _amountCalculator.checkOutDate;
-  int? get requiredRooms => _amountCalculator.requiredRooms;
+  DateTime? get checkInDate => amountCalculator.checkInDate;
+  DateTime? get checkOutDate => amountCalculator.checkOutDate;
+  int? get requiredRooms => amountCalculator.requiredRooms;
 
   get adultCount => null;
 
@@ -43,8 +41,8 @@ class BookingProvider extends ChangeNotifier {
     required DateRangeProvider dateRangeProvider,
     required PersonCountProvider personCountProvider,
   }) async {
-    final result = await _amountCalculator.calculateAmount(
-      availability: _availability,
+    final result = await amountCalculator.calculateAmount(
+      availability: availability,
       hotelId: hotelId,
       roomId: roomId,
       roomData: roomData,
@@ -62,7 +60,7 @@ class BookingProvider extends ChangeNotifier {
     required RoomModel roomData,
     required String roomId,
   }) async {
-    await _executor.bookRoom(
+    await executor.bookRoom(
       context: context,
       hotelId: hotelId,
       hotelData: hotelData,
@@ -72,11 +70,16 @@ class BookingProvider extends ChangeNotifier {
       checkInDate: checkInDate,
       checkOutDate: checkOutDate,
       requiredRooms: requiredRooms,
-      adultCount: _amountCalculator.adultCount,
-      childrenCount: _amountCalculator.childrenCount,
+      adultCount: amountCalculator.adultCount,
+      childrenCount: amountCalculator.childrenCount,
       onSuccess: () async {
-        _availability.clear();
-        _amountCalculator.clear();
+        availability.clear();
+        amountCalculator.clear();
+        Provider.of<DateRangeProvider>(listen: false, context).clearDateRange();
+        Provider.of<PersonCountProvider>(
+          listen: false,
+          context,
+        ).clearPersonData();
         notifyListeners();
         await fetchBookings();
       },
@@ -85,20 +88,20 @@ class BookingProvider extends ChangeNotifier {
 
   Future<void> fetchBookings() async {
     try {
-      _isLoading = true;
+      isLoading = true;
       notifyListeners();
-      bookings = await _bookingService.fetchUserBookings();
+      bookings = await bookingService.fetchUserBookings();
     } catch (e) {
       bookings = [];
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }
 
   void clearAvailabilityData() {
-    _availability.clear();
-    _amountCalculator.clear();
+    availability.clear();
+    amountCalculator.clear();
     notifyListeners();
   }
 
@@ -107,14 +110,22 @@ class BookingProvider extends ChangeNotifier {
     required String hotelId,
   }) async {
     try {
-      await _bookingService.cancelBooking(
+      await bookingService.cancelBooking(
         bookingId: bookingId,
         hotelId: hotelId,
       );
       await fetchBookings();
-      return true; // indicate success
+      return true;
     } catch (e) {
-      return false; // indicate failure
+      return false;
     }
+  }
+
+  void clear() {
+    bookings = null;
+    isLoading = false;
+    availability.clear();
+    amountCalculator.clear();
+    notifyListeners();
   }
 }

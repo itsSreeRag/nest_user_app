@@ -16,4 +16,8 @@ class NavigationBarProvider extends ChangeNotifier {
   void disposeController() {
     pageController.dispose();
   }
+
+  void clearNavidationBar(){
+    _currentIndex=0;
+  }
 }

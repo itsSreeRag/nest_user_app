@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +44,8 @@ class ReviewRatingProvider extends ChangeNotifier {
 
       await reviewRatingServices.reviewSubmitFirebase(newReview, reviewId);
 
-      _reviews.add(newReview);
+      // _reviews.add(newReview);
+      await fetchReviews(hotelId: hotelId);
       notifyListeners();
 
       Navigator.pop(context);

@@ -3,7 +3,7 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
 
 import 'package:provider/provider.dart';
-// Adjust the path as needed
+
 
 class AddRoomImageBottomSheet extends StatelessWidget {
   const AddRoomImageBottomSheet({super.key});

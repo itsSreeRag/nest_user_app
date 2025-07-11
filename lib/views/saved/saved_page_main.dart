@@ -12,13 +12,9 @@ class SavedPageMain extends StatelessWidget {
         backgroundColor: AppColors.background,
         title: Text(
           'Your Saved Hotels',
-          style: TextStyle(
-            color: AppColors.black87,
-            fontSize: 25,
-            fontWeight: FontWeight.w700,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w700),
         ),
-
+        centerTitle: true,
       ),
       body: Center(child: SavedHotelsGrid()),
     );

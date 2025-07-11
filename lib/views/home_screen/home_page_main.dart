@@ -38,15 +38,15 @@ class HomeScreenMain extends StatelessWidget {
 
         return const Padding(
           padding: EdgeInsets.all(8.0),
-          child: SingleChildScrollView(child: _HomeContentWithConsumers()),
+          child: SingleChildScrollView(child: HomeContentWithConsumers()),
         );
       },
     );
   }
 }
 
-class _HomeContentWithConsumers extends StatelessWidget {
-  const _HomeContentWithConsumers();
+class HomeContentWithConsumers extends StatelessWidget {
+  const HomeContentWithConsumers({super.key});
 
   @override
   Widget build(BuildContext context) {

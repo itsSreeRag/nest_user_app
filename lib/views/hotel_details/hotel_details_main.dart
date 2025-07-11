@@ -29,6 +29,7 @@ class HotelDetailsScreen extends StatelessWidget {
 
             HotelAmenitiesSection(hotelData: hotelData),
             SizedBox(height: 10),
+            
 
             HotelAvailableRoomsList(hotelData: hotelData),
             ContactDetailsWidget(

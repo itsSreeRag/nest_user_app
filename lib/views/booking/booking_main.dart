@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
-import 'package:nest_user_app/views/booking/booking_card/booking_card.dart';
-import 'package:nest_user_app/views/booking/booking_details/booking_details_main.dart';
+import 'package:nest_user_app/views/booking/booking_list.dart';
 import 'package:provider/provider.dart';
 
 class BookingPageMain extends StatelessWidget {
@@ -78,21 +77,18 @@ class BookingPageMain extends StatelessWidget {
                 },
                 child: TabBarView(
                   children: [
-                    _buildBookingList(
-                      context,
-                      upcoming,
-                      'No upcoming bookings.',
+                    BookingList(
+                      bookings: upcoming,
+                      emptyMsg: 'No upcoming bookings.',
                       cancelButton: true,
                     ),
-                    _buildBookingList(
-                      context,
-                      completed,
-                      'No completed bookings.',
+                    BookingList(
+                      bookings: completed,
+                      emptyMsg: 'No completed bookings.',
                     ),
-                    _buildBookingList(
-                      context,
-                      cancelled,
-                      'No cancelled bookings.',
+                    BookingList(
+                      bookings: cancelled,
+                      emptyMsg: 'No cancelled bookings.',
                     ),
                   ],
                 ),
@@ -101,50 +97,6 @@ class BookingPageMain extends StatelessWidget {
             return Container();
           },
         ),
-      ),
-    );
-  }
-
-  Widget _buildBookingList(
-    BuildContext context,
-    List bookings,
-    String emptyMsg, {
-    bool cancelButton = false,
-  }) {
-    if (bookings.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.book_outlined, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              emptyMsg,
-              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemCount: bookings.length,
-        itemBuilder: (context, index) {
-          final booking = bookings[index];
-          return InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => BookingDetailsPage(booking: booking),
-                ),
-              );
-            },
-            child: BookingsCard(booking: booking, cancelBooking: cancelButton),
-          );
-        },
       ),
     );
   }

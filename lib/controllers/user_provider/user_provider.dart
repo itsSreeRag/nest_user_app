@@ -15,35 +15,27 @@ class UserProvider with ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  UserModel? _currentUser;
-  bool _isLoading = false;
-  String? _error;
+  UserModel? currentUser;
+  bool isLoading = false;
+  String? error;
   String? userImage;
 
-  UserModel? get currentUser => _currentUser;
-  bool get isLoading => _isLoading;
-  String? get error => _error;
-
-  UserProvider() {
-    fetchUser();
-  }
-
-  // ✅ Add user only if not exists
+  // Add user only if not exists
   Future<void> addUser(UserModel user) async {
     try {
-      _isLoading = true;
-      _error = null;
+      isLoading = true;
+      error = null;
       notifyListeners();
 
       await _firestore.collection('users').doc(user.userId).set(user.toJson());
-      _currentUser = user;
+      currentUser = user;
       userImage = user.profileImage;
 
     } catch (e) {
-      _error = e.toString();
+      error = e.toString();
       debugPrint(' Error adding user: $e');
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }
@@ -64,7 +56,7 @@ class UserProvider with ChangeNotifier {
 
   //  Set current user manually
   void setCurrentUser(UserModel user) {
-    _currentUser = user;
+    currentUser = user;
     userImage = user.profileImage;
     notifyListeners();
   }
@@ -73,44 +65,44 @@ class UserProvider with ChangeNotifier {
     final uid = _auth.currentUser?.uid;
 
     if (uid == null) {
-      _error = 'No authenticated user found';
-      notifyListeners();
+      error = 'No authenticated user found';
+      // notifyListeners();
       return;
     }
 
     try {
-      _isLoading = true;
-      _error = null;
-      notifyListeners();
+      isLoading = true;
+      error = null;
+      // notifyListeners();
 
       final doc = await _firestore.collection('users').doc(uid).get();
 
       if (doc.exists && doc.data() != null) {
         final userData = UserModel.fromJson(doc.data()!);
-        _currentUser = userData;
+        currentUser = userData;
         userImage = userData.profileImage;
       } else {
-        _currentUser = null;
-        _error = 'User document not found';
+        currentUser = null;
+        error = 'User document not found';
       }
     } catch (e) {
-      _error = e.toString();
-      _currentUser = null;
-      debugPrint('❌ Error fetching user: $e');
+      error = e.toString();
+      currentUser = null;
+      debugPrint('Error fetching user: $e');
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      isLoading = false;
+      // notifyListeners();
     }
   }
 
   Future<void> updateUser(UserModel user, BuildContext context) async {
     try {
-      _isLoading = true;
-      _error = null;
+      isLoading = true;
+      error = null;
       notifyListeners();
 
       await _firestore.collection('users').doc(user.userId).update(user.toJson());
-      _currentUser = user;
+      currentUser = user;
 
       MyCustomSnackBar.show(
         context: context,
@@ -120,26 +112,26 @@ class UserProvider with ChangeNotifier {
         backgroundColor: AppColors.green,
       );
     } catch (e) {
-      _error = e.toString();
+      error = e.toString();
 
       MyCustomSnackBar.show(
         context: context,
         title: 'Error',
-        message: 'Failed to update user: $_error',
+        message: 'Failed to update user: $error',
         icon: Icons.error,
         backgroundColor: AppColors.red,
       );
     } finally {
-      _isLoading = false;
+      isLoading = false;
       notifyListeners();
     }
   }
 
   Future<String?> uploadImage(File image) async {
     try {
-      if (_currentUser == null) return null;
+      if (currentUser == null) return null;
 
-      final uniqueFileName = _currentUser!.userId;
+      final uniqueFileName = currentUser!.userId;
       final ref = _storage.ref().child('images/$uniqueFileName');
 
       final uploadTask = ref.putFile(image);
@@ -154,14 +146,14 @@ class UserProvider with ChangeNotifier {
   }
 
   void clearError() {
-    _error = null;
+    error = null;
     notifyListeners();
   }
 
   void clearUser() {
-    _currentUser = null;
-    _error = null;
-    _isLoading = false;
+    currentUser = null;
+    error = null;
+    isLoading = false;
     userImage = null;
     notifyListeners();
   }
