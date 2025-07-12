@@ -1,14 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 class NavigationBarProvider extends ChangeNotifier {
-  int _currentIndex = 0;
+  int currentIndex = 0;
 
-  int get currentIndex => _currentIndex;
-
+ 
   PageController pageController = PageController(initialPage: 0);
 
   void updateIndex(int index) {
-    _currentIndex = index;
+    currentIndex = index;
     pageController.jumpToPage(index);
     notifyListeners();
   }
@@ -18,6 +17,6 @@ class NavigationBarProvider extends ChangeNotifier {
   }
 
   void clearNavidationBar(){
-    _currentIndex=0;
+    currentIndex=0;
   }
 }

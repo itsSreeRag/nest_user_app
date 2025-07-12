@@ -35,24 +35,32 @@ class MyAuthProviders with ChangeNotifier {
     final sharedPref = await SharedPreferences.getInstance();
     sharedPref.setBool('isLoggedIn', true);
   }
-
-  // Sign out the user and reset the login state
+  
   Future<void> logout(BuildContext context) async {
-    await authService.signOut(); // Firebase sign out
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final navProvider = Provider.of<NavigationBarProvider>(
+      context,
+      listen: false,
+    );
+    final bookingProvider = Provider.of<BookingProvider>(
+      context,
+      listen: false,
+    );
+    final favProvider = Provider.of<FavoriteProvider>(context, listen: false);
+
+    await authService.signOut();
+
     user = null;
     notifyListeners();
 
+    userProvider.clearUser();
+    navProvider.clearNavidationBar();
+    bookingProvider.clearBooking();
+    favProvider.clearSaved();
+
     AuthMessages.showSuccess(context, 'Logout successful');
     (await SharedPreferences.getInstance()).setBool('isLoggedIn', false);
-    Provider.of<UserProvider>(listen: false, context).clearUser();
-    Provider.of<NavigationBarProvider>(
-      context,
-      listen: false,
-    ).clearNavidationBar();
-    Provider.of<BookingProvider>(context, listen: false).clearBooking();
-    Provider.of<FavoriteProvider>(context, listen: false).clearSaved();
 
-    // Navigate to login page
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const LogInPageMain()),

@@ -19,7 +19,7 @@ void showLogoutDialog(BuildContext context) {
           TextButton(
             onPressed: () {
               authProvider.logout(context);
-              Navigator.of(context).pop();
+              // Navigator.of(context).pop();
             },
             child: const Text("Yes"),
           ),
