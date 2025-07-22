@@ -15,7 +15,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
   void _launchPhoneNumber(String phoneNumber) async {
     final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
     if (await canLaunchUrl(phoneUri)) {
-      await launchUrl(phoneUri);
+      await launchUrl(phoneUri, mode: LaunchMode.externalApplication);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Could not launch phone number')),
@@ -27,16 +27,16 @@ class _ContactUsPageState extends State<ContactUsPage> {
     final Uri emailUri = Uri(scheme: 'mailto', path: email);
     try {
       if (await canLaunchUrl(emailUri)) {
-        await launchUrl(emailUri);
+        await launchUrl(emailUri, mode: LaunchMode.externalApplication);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No email app available')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('No email app available')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to open email: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to open email: $e')));
     }
   }
 
@@ -95,8 +95,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               color: AppColors.primary.withAlpha(25),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(Icons.phone,
-                                color: AppColors.primary, size: 28),
+                            child: const Icon(
+                              Icons.phone,
+                              color: AppColors.primary,
+                              size: 28,
+                            ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
@@ -129,8 +132,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               ],
                             ),
                           ),
-                          const Icon(Icons.arrow_forward_ios,
-                              color: AppColors.primary, size: 20),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.primary,
+                            size: 20,
+                          ),
                         ],
                       ),
                     ),
@@ -146,7 +152,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: InkWell(
-                    onTap: () => _launchEmail('contact@nests.com'),
+                    onTap: () => _launchEmail('connectwithnest@gmail.com'),
                     borderRadius: BorderRadius.circular(15),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
@@ -158,8 +164,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               color: AppColors.green.withAlpha(25),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Icon(Icons.email,
-                                color: AppColors.green, size: 28),
+                            child: const Icon(
+                              Icons.email,
+                              color: AppColors.green,
+                              size: 28,
+                            ),
                           ),
                           const SizedBox(width: 20),
                           Expanded(
@@ -192,8 +201,11 @@ class _ContactUsPageState extends State<ContactUsPage> {
                               ],
                             ),
                           ),
-                          const Icon(Icons.arrow_forward_ios,
-                              color: AppColors.green, size: 20),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: AppColors.green,
+                            size: 20,
+                          ),
                         ],
                       ),
                     ),
@@ -222,8 +234,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Icon(Icons.access_time,
-                              color: AppColors.grey600),
+                          Icon(Icons.access_time, color: AppColors.grey600),
                           const SizedBox(width: 8),
                           Text(
                             'Monday - Friday: 9:00 AM - 6:00 PM',

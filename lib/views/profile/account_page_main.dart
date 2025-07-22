@@ -8,8 +8,12 @@ class AccountPageMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        title: Text('My Profile', style: TextStyle(fontSize: 25)),
+        centerTitle: true,
+      ),
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(

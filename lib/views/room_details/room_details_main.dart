@@ -43,7 +43,6 @@ class RoomDetailsMain extends StatelessWidget {
                             (context) => BookingSectionMain(
                               hotelData: hotelData!,
                               roomData: roomData,
-                              
                             ),
                       ),
                     );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/views/profile/privacy_policy_page/privacy_policy_screen.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/widgets/acc_page_tile_section.dart';
 import 'package:nest_user_app/views/profile/account_page_main.dart';
 import 'package:nest_user_app/views/profile/profile_details.dart/widgets/log_out_alert_box.dart';
+import 'package:nest_user_app/views/profile/terms_and_conditions/terms_and_conditions_page.dart';
 import 'package:nest_user_app/views/reports/reprot_showing_page/report_showing_page_main.dart';
 
 class AccPageSettings extends StatelessWidget {
@@ -17,23 +19,23 @@ class AccPageSettings extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // TileSection(
+          //   ontap: () {
+          //     Navigator.of(
+          //       context,
+          //     ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
+          //   },
+          //   leadicon: Icons.share,
+          //   title: 'Share',
+          //   subtitle: 'Share the app with friends',
+          //   trailicon: Icons.arrow_forward_ios,
+          //   color: AppColors.primary,
+          // ),
           TileSection(
             ontap: () {
               Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
-            },
-            leadicon: Icons.share,
-            title: 'Share',
-            subtitle: 'Share the app with friends',
-            trailicon: Icons.arrow_forward_ios,
-            color: AppColors.primary,
-          ),
-          TileSection(
-            ontap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
+              ).push(MaterialPageRoute(builder: (context) => PrivacyPolicyPage()));
             },
             leadicon: Icons.security,
             title: 'Privacy Policy',
@@ -45,7 +47,7 @@ class AccPageSettings extends StatelessWidget {
             ontap: () {
               Navigator.of(
                 context,
-              ).push(MaterialPageRoute(builder: (context) => SampleScreen()));
+              ).push(MaterialPageRoute(builder: (context) => TermsAndConditions()));
             },
             leadicon: Icons.file_copy,
             title: 'Terms&Conditions',
