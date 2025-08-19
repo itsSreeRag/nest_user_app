@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nest_user_app/constants/colors.dart';
+import 'package:nest_user_app/constants/password_field_types.dart';
 import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,7 @@ class MyCustomTextFormField extends StatelessWidget {
   final String? hintText;
   final IconData? prefixIcon;
   final bool obscureText;
+  final PasswordFieldType? passwordType;
   final String? prefixText;
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
@@ -35,6 +37,7 @@ class MyCustomTextFormField extends StatelessWidget {
     this.prefixText,
     this.prefixIcon,
     this.obscureText = false,
+    this.passwordType,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
     required this.validator,
@@ -55,7 +58,11 @@ class MyCustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<CustometexfieldProvider>(
-      builder: (context, custometexfieldProvider, child) {
+      builder: (context, provider, child) {
+        final isPasswordField = obscureText && passwordType != null;
+        final isObscure =
+            isPasswordField ? provider.isObscure(passwordType!) : false;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -69,92 +76,73 @@ class MyCustomTextFormField extends StatelessWidget {
                 ),
               ),
             if (labelText != null && labelText!.isNotEmpty) SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.black.withAlpha(13),
-                    blurRadius: 10,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextFormField(
-                minLines: minLines,
-                maxLines: maxLines,
-                controller: controller,
-                obscureText:
-                    obscureText
-                        ? custometexfieldProvider.isObscureText
-                        : obscureText,
-                keyboardType: keyboardType,
-                textInputAction: textInputAction,
-                validator: validator,
-                onChanged: onChanged,
-                maxLength: maxlength,
-                autovalidateMode: autovalidateMode,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: AppColors.white,
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  prefixText: prefixText,
-                  hintText: hintText,
-                  hintStyle: TextStyle(color: AppColors.black38, fontSize: 14),
-                  prefixIcon:
-                      prefixIcon != null
-                          ? Icon(prefixIcon, color: AppColors.primary, size: 20)
-                          : null,
-                  suffixIcon:
-                      obscureText
-                          ? IconButton(
-                            onPressed: () {
-                              custometexfieldProvider.visibilityButtonClick();
-                            },
-                            icon:
-                                custometexfieldProvider.isObscureText
-                                    ? const Icon(Icons.visibility)
-                                    : const Icon(Icons.visibility_off),
-                          )
-                          : null,
-                  contentPadding:
-                      contentPadding ??
-                      const EdgeInsets.symmetric(
-                        vertical: 15.0,
-                        horizontal: 18.0,
-                      ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: borderColor ?? AppColors.grey300,
-                      width: 1,
+            TextFormField(
+              minLines: minLines,
+              maxLines: maxLines,
+              controller: controller,
+              obscureText: isPasswordField ? isObscure : false,
+              keyboardType: keyboardType,
+              textInputAction: textInputAction,
+              validator: validator,
+              onChanged: onChanged,
+              maxLength: maxlength,
+              autovalidateMode: autovalidateMode,
+              readOnly: readOnly,
+              inputFormatters: inputFormatters,
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                prefixText: prefixText,
+                hintText: hintText,
+                hintStyle: TextStyle(color: AppColors.black38, fontSize: 14),
+                prefixIcon:
+                    prefixIcon != null
+                        ? Icon(prefixIcon, color: AppColors.primary, size: 20)
+                        : null,
+                suffixIcon:
+                    isPasswordField
+                        ? IconButton(
+                          onPressed: () {
+                            provider.toggleVisibility(passwordType!);
+                          },
+                          icon: Icon(
+                            isObscure ? Icons.visibility : Icons.visibility_off,
+                          ),
+                        )
+                        : null,
+                contentPadding:
+                    contentPadding ??
+                    const EdgeInsets.symmetric(
+                      vertical: 15.0,
+                      horizontal: 18.0,
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: focusedBorderColor ?? AppColors.primary,
-                      width: 1.5,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: enabledBorderColor ?? AppColors.grey300,
-                      width: 1,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                      color: errorBorderColor ?? AppColors.red,
-                      width: 1,
-                    ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: borderColor ?? AppColors.grey300,
+                    width: 1,
                   ),
                 ),
-                readOnly: readOnly,
-                inputFormatters: inputFormatters,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: focusedBorderColor ?? AppColors.primary,
+                    width: 1.5,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: enabledBorderColor ?? AppColors.grey300,
+                    width: 1,
+                  ),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(
+                    color: errorBorderColor ?? AppColors.red,
+                    width: 1,
+                  ),
+                ),
               ),
             ),
           ],

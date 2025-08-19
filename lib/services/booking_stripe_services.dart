@@ -1,4 +1,6 @@
 // payment_handler.dart
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/services/stripe_services.dart';

@@ -35,55 +35,57 @@ class ReportPageMain extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Form(
           key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Write A report',
-                style: TextStyle(
-                  color: AppColors.black87,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Write A report',
+                  style: TextStyle(
+                    color: AppColors.black87,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              SizedBox(height: 15),
-              MyCustomTextFormField(
-                controller: reportDescription,
-                hintText: 'What should other customer know?',
-                validator:
-                    (value) => MyAppValidators().validateNames(
-                      value,
-                      name: 'Add your review',
-                    ),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                maxLines: 10,
-                minLines: 10,
-              ),
-              SizedBox(height: 15),
-              MyCustomTextFormField(
-                labelText: 'Title Your report (required)',
-                controller: titleController,
-                hintText: 'What\'s most important to know?',
-                validator:
-                    (value) => MyAppValidators().validateNames(
-                      value,
-                      name: 'Add your report title',
-                    ),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-              ),
-              SizedBox(height: 15),
-              MyCustomTextFormField(
-                labelText: 'What,s Your public name? (required)',
-                controller: nameController,
-                hintText: 'What\'s most important to know?',
-                validator:
-                    (value) => MyAppValidators().validateNames(
-                      value,
-                      name: 'Add your Review title',
-                    ),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-              ),
-            ],
+                SizedBox(height: 15),
+                MyCustomTextFormField(
+                  controller: reportDescription,
+                  hintText: 'What should other customer know?',
+                  validator:
+                      (value) => MyAppValidators().validateNames(
+                        value,
+                        name: 'Add your review',
+                      ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  maxLines: 10,
+                  minLines: 10,
+                ),
+                SizedBox(height: 15),
+                MyCustomTextFormField(
+                  labelText: 'Title Your report (required)',
+                  controller: titleController,
+                  hintText: 'What\'s most important to know?',
+                  validator:
+                      (value) => MyAppValidators().validateNames(
+                        value,
+                        name: 'Add your report title',
+                      ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+                SizedBox(height: 15),
+                MyCustomTextFormField(
+                  labelText: 'What,s Your public name? (required)',
+                  controller: nameController,
+                  hintText: 'What\'s most important to know?',
+                  validator:
+                      (value) => MyAppValidators().validateNames(
+                        value,
+                        name: 'Add your Review title',
+                      ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -102,6 +104,7 @@ class ReportPageMain extends StatelessWidget {
                 reportTitle: titleController.text,
                 report: reportDescription.text,
               );
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
             }
           },

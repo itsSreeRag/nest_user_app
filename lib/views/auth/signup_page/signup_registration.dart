@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/my_app_validators.dart';
+import 'package:nest_user_app/constants/password_field_types.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
@@ -52,6 +53,7 @@ class SignupRegistration extends StatelessWidget {
             hintText: 'Enter password',
             prefixIcon: Icons.password,
             obscureText: true,
+            passwordType: PasswordFieldType.register,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: myAppValidators.validatePassword,
           ),
@@ -69,44 +71,48 @@ class SignupRegistration extends StatelessWidget {
             hintText: 'Enter Password',
             prefixIcon: Icons.password,
             obscureText: true,
+            passwordType: PasswordFieldType.confirm,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: myAppValidators.validatePassword,
           ),
           const SizedBox(height: 30),
           Consumer<MyAuthProviders>(
             builder: (context, authProvider, child) {
-              return MyCustomButton(
-                onPressed: () async {
-                  if (formKey.currentState!.validate()) {
-                    if (passwordController.text == repasswordController.text) {
-                      bool success = await authProvider.createAccount(
-                        emailController.text,
-                        passwordController.text,
-                        context,
-                      );
-                      if (success) {
-                        Navigator.pushReplacement(
-                          // ignore: use_build_context_synchronously
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LogInPageMain(),
-                          ),
-                        );
+              return authProvider.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : MyCustomButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        if (passwordController.text ==
+                            repasswordController.text) {
+                          bool success = await authProvider.createAccount(
+                            emailController.text,
+                            passwordController.text,
+                            context,
+                          );
+                          if (success) {
+                            Navigator.pushReplacement(
+                              // ignore: use_build_context_synchronously
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LogInPageMain(),
+                              ),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: AppColors.red,
+                              content: Text('Passwords do not match'),
+                            ),
+                          );
+                        }
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: AppColors.red,
-                          content: Text('Passwords do not match'),
-                        ),
-                      );
-                    }
-                  }
-                },
-                backgroundcolor: AppColors.primary,
-                textcolor: AppColors.white,
-                text: 'SignUp',
-              );
+                    },
+                    backgroundcolor: AppColors.primary,
+                    textcolor: AppColors.white,
+                    text: 'SignUp',
+                  );
             },
           ),
         ],

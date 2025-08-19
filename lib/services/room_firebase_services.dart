@@ -21,7 +21,7 @@ class RoomService {
 
       return rooms;
     } catch (e) {
-      print("Error fetching rooms: $e");
+
       return [];
     }
   }

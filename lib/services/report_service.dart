@@ -13,7 +13,7 @@ class ReportServices {
     await _firestore.collection('reprot').doc(reprotId).set(report.toMap());
   }
 
-  Future<List<ReportModel>> fetchReportsByUserId(String userId) async {
+  Future<List<ReportModel>> fetchReportsByUserId() async {
     try {
       final snapshot = await _firestore.collection('reprot').get();
 
@@ -21,7 +21,6 @@ class ReportServices {
           .map((doc) => ReportModel.fromMap(doc.data()))
           .toList();
     } catch (e) {
-      print('Error fetching reports: $e');
       return [];
     }
   }

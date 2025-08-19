@@ -15,6 +15,7 @@ class StripeServices {
         "https://httpbin.org/get",
         options: Options(receiveTimeout: Duration(seconds: 10)),
       );
+      log(response.toString());
       return true;
     } catch (e) {
       return false;

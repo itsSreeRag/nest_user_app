@@ -15,7 +15,6 @@ import 'package:nest_user_app/views/navigation_bar/navigation_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// This provider handles all user authentication-related logic
 class MyAuthProviders with ChangeNotifier {
   final FirebaseAuthService authService = FirebaseAuthService();
 
@@ -23,6 +22,12 @@ class MyAuthProviders with ChangeNotifier {
   String? errorMessage;
   bool showOtpField = false;
   String? verificationId;
+  bool isLoading = false;
+
+  void setLoading(bool value) {
+    isLoading = value;
+    notifyListeners();
+  }
 
   // Check if user is logged in using SharedPreferences
   Future<bool> checkUserLogin() async {
@@ -35,7 +40,7 @@ class MyAuthProviders with ChangeNotifier {
     final sharedPref = await SharedPreferences.getInstance();
     sharedPref.setBool('isLoggedIn', true);
   }
-  
+
   Future<void> logout(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final navProvider = Provider.of<NavigationBarProvider>(
@@ -70,6 +75,7 @@ class MyAuthProviders with ChangeNotifier {
 
   // Sign in using Google account
   Future<bool> regUsingGoogleAcc(BuildContext context) async {
+    setLoading(true);
     try {
       user = await authService.signInWithGoogle();
       notifyListeners();
@@ -90,7 +96,9 @@ class MyAuthProviders with ChangeNotifier {
     } catch (e) {
       AuthMessages.showError(context, 'Google Sign-In Failed: $e');
       return false;
-    }
+    }finally {
+    setLoading(false);
+  }
   }
 
   // Register a new user using email and password
@@ -99,6 +107,7 @@ class MyAuthProviders with ChangeNotifier {
     String password,
     BuildContext context,
   ) async {
+    setLoading(true);
     try {
       user = await authService.registerWithEmail(email, password);
       notifyListeners();
@@ -114,7 +123,9 @@ class MyAuthProviders with ChangeNotifier {
       notifyListeners();
       AuthMessages.showError(context, errorMessage!);
       return false;
-    }
+    }finally {
+    setLoading(false);
+  }
   }
 
   // Log in with email and password
@@ -123,6 +134,7 @@ class MyAuthProviders with ChangeNotifier {
     String password,
     BuildContext context,
   ) async {
+    setLoading(true);
     try {
       await authService.loginWithEmail(email, password);
       await saveUserLoggedIn();
@@ -137,7 +149,9 @@ class MyAuthProviders with ChangeNotifier {
       AuthMessages.showError(context, AuthHelpers.getLoginErrorMessage(e));
     } catch (_) {
       AuthMessages.showError(context, 'An unexpected error occurred.');
-    }
+    } finally {
+    setLoading(false);
+  }
   }
 
   // Send OTP to the given phone number
