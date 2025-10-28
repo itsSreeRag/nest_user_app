@@ -30,7 +30,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load();
-  // log(dotenv.env.toString());
   await Firebase.initializeApp();
   await _setup();
   runApp(const MyApp());
@@ -40,7 +39,7 @@ Future<void> _setup() async {
   Stripe.publishableKey = StripeKeys.publishableKey;
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatelessWidget { 
   const MyApp({super.key});
 
   @override

@@ -24,7 +24,7 @@ class HotelAmenitiesCard extends StatelessWidget {
           child: Center(child: Icon(icon, size: 30, color: AppColors.green)),
         ),
         SizedBox(height: 8),
-        Text(label),
+        Text(label, overflow: TextOverflow.ellipsis),
       ],
     );
   }

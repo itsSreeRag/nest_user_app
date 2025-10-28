@@ -7,7 +7,6 @@ import 'package:nest_user_app/views/auth/forgot_password/forgot_password_page.da
 import 'package:nest_user_app/views/auth/signup_page/sign_up_screen.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
-
 import 'package:provider/provider.dart';
 
 class LoginPageEmailAuth extends StatelessWidget {

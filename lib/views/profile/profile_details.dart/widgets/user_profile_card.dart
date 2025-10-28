@@ -9,88 +9,126 @@ class UserProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
+
+    double textScale = width / 390; 
+    double avatarRadius = width * 0.14;
+    double padding = width * 0.05; 
+
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Profile Image
           CircleAvatar(
-            radius: 55,
+            radius: avatarRadius,
             backgroundImage:
                 (userData.profileImage != null &&
                         userData.profileImage!.startsWith("http"))
-                    ? NetworkImage(userData.profileImage!)
+                    ? NetworkImage(userData.profileImage!) as ImageProvider
                     : const AssetImage('assets/images/images_1.jpg'),
           ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                userData.name!,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.black87,
+
+          SizedBox(width: width * 0.04),
+
+          // User Details
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Name
+                Text(
+                  userData.name ?? "User Name",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 22 * textScale,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.black87,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  if (userData.phoneNumber!.isNotEmpty)
-                    Icon(Icons.phone, size: 14, color: AppColors.grey600),
-                  const SizedBox(width: 5),
-                  Text(
-                    userData.phoneNumber!,
-                    style: TextStyle(
-                      color: AppColors.grey600,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  if (userData.email!.isNotEmpty)
-                    Icon(Icons.email, size: 14, color: AppColors.grey600),
-                  const SizedBox(width: 5),
-                  Text(
-                    userData.email!,
-                    style: TextStyle(
-                      color: AppColors.grey600,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () {
-                  // Add navigation to Edit Profile screen here
-                },
-                child: Row(
-                  children: [
-                    Icon(Icons.edit, size: 18, color: AppColors.blue700),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Edit',
-                      style: TextStyle(
-                        color: AppColors.blue700,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+
+                SizedBox(height: height * 0.005),
+
+                // Phone Number
+                if (userData.phoneNumber != null &&
+                    userData.phoneNumber!.isNotEmpty)
+                  Row(
+                    children: [
+                      Icon(Icons.phone,
+                          size: 14 * textScale, color: AppColors.grey600),
+                      SizedBox(width: width * 0.012),
+                      Flexible(
+                        child: Text(
+                          userData.phoneNumber!,
+                          style: TextStyle(
+                            color: AppColors.grey600,
+                            fontSize: 14 * textScale,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+
+                SizedBox(height: height * 0.005),
+
+                // Email
+                if (userData.email != null && userData.email!.isNotEmpty)
+                  Row(
+                    children: [
+                      Icon(Icons.email,
+                          size: 14 * textScale, color: AppColors.grey600),
+                      SizedBox(width: width * 0.012),
+                      Flexible(
+                        child: Text(
+                          userData.email!,
+                          style: TextStyle(
+                            color: AppColors.grey600,
+                            fontSize: 14 * textScale,
+                            fontWeight: FontWeight.w500,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                SizedBox(height: height * 0.008),
+
+                // Edit button
+                GestureDetector(
+                  onTap: () {
+                   
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit,
+                          size: 18 * textScale, color: AppColors.blue700),
+                      SizedBox(width: width * 0.012),
+                      Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: AppColors.blue700,
+                          fontSize: 17 * textScale,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

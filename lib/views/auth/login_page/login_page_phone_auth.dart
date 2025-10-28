@@ -69,7 +69,7 @@ class LoginPagePhoneAuth extends StatelessWidget {
                     MyCustomTextFormField(
                       controller: phoneNumController,
                       prefixIcon: Icons.phone_android,
-                      labelText: 'Phone Number',
+                      // labelText: 'Phone Number',
                       hintText: 'Enter Phone Number',
                       keyboardType: TextInputType.phone,
                       autovalidateMode: AutovalidateMode.onUserInteraction,

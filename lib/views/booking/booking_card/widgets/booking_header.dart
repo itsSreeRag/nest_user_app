@@ -21,13 +21,16 @@ class BookingHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              hotelName,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppColors.black87,
-                overflow: TextOverflow.ellipsis,
+            SizedBox(
+              width: 150,
+              child: Text(
+                hotelName,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black87,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             Container(

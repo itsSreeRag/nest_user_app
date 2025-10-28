@@ -28,10 +28,19 @@ class HotelCard2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
+    // Scale factors based on screen width
+    double textScale = width / 390; // 390 is base iPhone 12 width
+    double imageWidth = width * 0.35;
+    double imageHeight = height * 0.18;
+
     return Container(
       width: double.infinity,
-      height: 160,
-      margin: const EdgeInsets.only(bottom: 10),
+      height: height * 0.20,
+      margin: EdgeInsets.only(bottom: height * 0.012),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(24),
@@ -41,7 +50,6 @@ class HotelCard2 extends StatelessWidget {
             color: AppColors.black.withAlpha(20),
             blurRadius: 20,
             offset: const Offset(0, 8),
-            spreadRadius: 0,
           ),
         ],
       ),
@@ -49,19 +57,18 @@ class HotelCard2 extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         child: Row(
           children: [
-            // Hotel image with gradient overlay
+            // Hotel image
             Stack(
               children: [
                 SizedBox(
-                  width: 140,
-                  height: 160,
+                  width: imageWidth,
+                  height: imageHeight,
                   child: CachedNetworkImage(
-                    progressIndicatorBuilder:
-                        (context, url, progress) => Center(
-                          child: CircularProgressIndicator(
-                            value: progress.progress,
-                          ),
-                        ),
+                    progressIndicatorBuilder: (context, url, progress) => Center(
+                      child: CircularProgressIndicator(
+                        value: progress.progress,
+                      ),
+                    ),
                     imageUrl: imagePath,
                     fit: BoxFit.cover,
                   ),
@@ -72,9 +79,10 @@ class HotelCard2 extends StatelessWidget {
             // Hotel details
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(width * 0.04),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Hotel name
                     Text(
@@ -82,13 +90,11 @@ class HotelCard2 extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 18 * textScale,
                         fontWeight: FontWeight.bold,
                         color: AppColors.black87,
                       ),
                     ),
-
-                    const SizedBox(height: 6),
 
                     // Location
                     Row(
@@ -96,9 +102,9 @@ class HotelCard2 extends StatelessWidget {
                         Icon(
                           Icons.location_on_rounded,
                           color: AppColors.primary,
-                          size: 14,
+                          size: 14 * textScale,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4 * textScale),
                         Expanded(
                           child: Text(
                             location,
@@ -106,45 +112,41 @@ class HotelCard2 extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               color: AppColors.grey600,
-                              fontSize: 13,
+                              fontSize: 13 * textScale,
                             ),
                           ),
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 10),
-
                     // Amenities
                     Row(
-                      children:
-                          amenities
-                              .take(3)
-                              .map(
-                                (amenity) => Container(
-                                  margin: const EdgeInsets.only(right: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primary.withAlpha(95),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    amenity,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                      children: amenities.take(3).map(
+                        (amenity) {
+                          return Container(
+                            margin: EdgeInsets.only(right: 6 * textScale),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8 * textScale,
+                              vertical: 4 * textScale,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withAlpha(95),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              amenity,
+                              style: TextStyle(
+                                fontSize: 11 * textScale,
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
                     ),
 
-                    // Price and Favorite button
+                    // Price & Favorite button
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -157,14 +159,14 @@ class HotelCard2 extends StatelessWidget {
                                 style: TextStyle(
                                   color: Colors.teal.shade700,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                                  fontSize: 18 * textScale,
                                 ),
                               ),
                               TextSpan(
                                 text: '/night',
                                 style: TextStyle(
                                   color: Colors.grey.shade600,
-                                  fontSize: 13,
+                                  fontSize: 13 * textScale,
                                 ),
                               ),
                             ],
@@ -173,32 +175,33 @@ class HotelCard2 extends StatelessWidget {
 
                         // Favorite button
                         Consumer<FavoriteProvider>(
-                          builder: (context,favoriteProvider,_) {
+                          builder: (context, favoriteProvider, _) {
                             final isFav = favoriteProvider.isFavorite(hotelId);
                             return InkWell(
                               onTap: () {
-                                favoriteProvider.toggleFavorite(hotelId,context);
+                                favoriteProvider.toggleFavorite(hotelId, context);
                               },
                               child: Container(
-                                width: 38,
-                                height: 38,
+                                width: width * 0.09,
+                                height: width * 0.09,
                                 decoration: BoxDecoration(
-                                  color:
-                                      isFav
-                                          ? AppColors.red.withAlpha(50)
-                                          : AppColors.grey.withAlpha(50),
+                                  color: isFav
+                                      ? AppColors.red.withAlpha(50)
+                                      : AppColors.grey.withAlpha(50),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Icon(
                                   isFav
                                       ? Icons.favorite_rounded
                                       : Icons.favorite_outline_rounded,
-                                  color: isFav ? Colors.red : Colors.grey.shade600,
-                                  size: 20,
+                                  color: isFav
+                                      ? Colors.red
+                                      : Colors.grey.shade600,
+                                  size: 20 * textScale,
                                 ),
                               ),
                             );
-                          }
+                          },
                         ),
                       ],
                     ),

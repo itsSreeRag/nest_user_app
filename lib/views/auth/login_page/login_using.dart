@@ -32,11 +32,20 @@ class LoginUsing extends StatelessWidget {
                       child: Image.asset('assets/icons/google_icon.png'),
                     ),
                   ),
-                  // const SizedBox(width: 30),
-                  // SizedBox(
-                  //   width: 50,
-                  //   height: 50,
-                  //   child: Image.asset('assets/icons/facebook_icon.jpg'),
+                  const SizedBox(width: 30),
+                  // InkWell(
+                  //   onTap:
+                  //       () => Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => PhoneNumberAuthPageGradient(),
+                  //         ),
+                  //       ),
+                  //   child: SizedBox(
+                  //     width: 50,
+                  //     height: 50,
+                  //     child: Image.asset('assets/icons/phone.png'),
+                  //   ),
                   // ),
                 ],
               );
