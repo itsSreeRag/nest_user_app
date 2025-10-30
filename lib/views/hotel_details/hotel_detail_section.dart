@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/models/hotel_models.dart';
+import 'package:nest_user_app/views/hotel_details/widgets/discover_button.dart';
 import 'package:nest_user_app/views/hotel_details/widgets/hotel_description_widget.dart';
 import 'package:nest_user_app/views/hotel_details/widgets/location_card_widget.dart';
 import 'package:nest_user_app/views/hotel_details/widgets/price_tag_widget.dart';
@@ -23,9 +24,7 @@ class HotelDetailSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           HotelDescriptionWidget(description: hotelData.hotelDescription),
-
           const SizedBox(height: 24),
-
           // Price Section
           SectionHeaderWidget(
             title: 'Starting Price',
@@ -33,9 +32,7 @@ class HotelDetailSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           PriceTagWidget(basePrice: hotelData.basePrice),
-
           const SizedBox(height: 24),
-
           // Address Section
           SectionHeaderWidget(
             title: 'Location',
@@ -47,10 +44,11 @@ class HotelDetailSection extends StatelessWidget {
             state: hotelData.state,
             country: hotelData.country,
           ),
+          SizedBox(height: 20),
+          // AI Tourist Spots Button
+          DiscoverButton(city: hotelData.city),
         ],
       ),
     );
   }
 }
-
-

@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:nest_user_app/constants/gemini_api_constance.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/stripe_const.dart';
 import 'package:nest_user_app/controllers/animation_provider/home_animation.dart';
@@ -11,6 +13,7 @@ import 'package:nest_user_app/controllers/custometextfield_provider/custometexfi
 import 'package:nest_user_app/controllers/date_range_provider/date_range_provider.dart';
 import 'package:nest_user_app/controllers/date_range_provider/person_count_provider.dart';
 import 'package:nest_user_app/controllers/favorite_provider/favorite_provider.dart';
+import 'package:nest_user_app/controllers/gemini_provider/gemini_provider.dart';
 import 'package:nest_user_app/controllers/hotel_provider/hotel_provider.dart';
 import 'package:nest_user_app/controllers/image_provider/image_provider.dart';
 import 'package:nest_user_app/controllers/location_provider/location_provider.dart';
@@ -31,6 +34,7 @@ void main() async {
 
   await dotenv.load();
   await Firebase.initializeApp();
+  Gemini.init(apiKey: GeminiApiKeys.geminiApiKey);
   await _setup();
   runApp(const MyApp());
 }
@@ -39,7 +43,7 @@ Future<void> _setup() async {
   Stripe.publishableKey = StripeKeys.publishableKey;
 }
 
-class MyApp extends StatelessWidget { 
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
@@ -64,7 +68,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (context) => ReviewRatingProvider()),
         ChangeNotifierProvider(create: (_) => ReportProvider()),
-        ChangeNotifierProvider(create: (_) => PrivacyPolicyProvider()..loadPrivacyAndTerms()),
+        ChangeNotifierProvider(
+          create: (_) => PrivacyPolicyProvider()..loadPrivacyAndTerms(),
+        ),
+        ChangeNotifierProvider(create: (_) => GeminiProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
