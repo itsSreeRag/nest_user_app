@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nest_user_app/constants/colors.dart';
-import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
+import 'package:nest_user_app/views/auth/signin_page/signin_page_main.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 
 class MyGetStartScreen extends StatelessWidget {
@@ -55,7 +55,7 @@ class MyGetStartScreen extends StatelessWidget {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LogInPageMain(),
+                        builder: (context) => const SignInPageMain(),
                       ),
                     );
                   },

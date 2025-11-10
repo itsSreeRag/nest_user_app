@@ -3,7 +3,7 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/constants/password_field_types.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
-import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
+import 'package:nest_user_app/views/auth/signin_page/signin_page_main.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
 
@@ -95,7 +95,7 @@ class SignupRegistration extends StatelessWidget {
                               // ignore: use_build_context_synchronously
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const LogInPageMain(),
+                                builder: (context) => const SignInPageMain(),
                               ),
                             );
                           }

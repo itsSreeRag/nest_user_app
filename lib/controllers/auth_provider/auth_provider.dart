@@ -10,7 +10,8 @@ import 'package:nest_user_app/controllers/navigation_bar_provider/navigation_bar
 import 'package:nest_user_app/controllers/user_provider/user_provider.dart';
 import 'package:nest_user_app/models/user_model.dart';
 import 'package:nest_user_app/services/firebase_auth_service.dart';
-import 'package:nest_user_app/views/auth/login_page/login_page_main.dart';
+import 'package:nest_user_app/views/auth/signin_page/signin_page_main.dart';
+import 'package:nest_user_app/views/auth/signin_page/widgets/otp_bottom_sheet/otp_bottom_sheet.dart';
 import 'package:nest_user_app/views/navigation_bar/navigation_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,8 +25,28 @@ class MyAuthProviders with ChangeNotifier {
   String? verificationId;
   bool isLoading = false;
 
+  bool isLoadingPhone=false;
+
+  
+
+  String _countryCode = '+91';
+  TextEditingController phoneNumberController = TextEditingController();
+
+  String get countryCode => _countryCode;
+  // String get phoneNumber => _phoneNumber;
+
+  void updateCountryCode(String code) {
+    _countryCode = code;
+    notifyListeners();
+  }
+
   void setLoading(bool value) {
     isLoading = value;
+    notifyListeners();
+  }
+
+   void setLoadingPhone(bool value) {
+    isLoadingPhone = value;
     notifyListeners();
   }
 
@@ -68,7 +89,7 @@ class MyAuthProviders with ChangeNotifier {
 
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const LogInPageMain()),
+      MaterialPageRoute(builder: (context) => const SignInPageMain()),
       (route) => false,
     );
   }
@@ -96,9 +117,9 @@ class MyAuthProviders with ChangeNotifier {
     } catch (e) {
       AuthMessages.showError(context, 'Google Sign-In Failed: $e');
       return false;
-    }finally {
-    setLoading(false);
-  }
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Register a new user using email and password
@@ -123,9 +144,9 @@ class MyAuthProviders with ChangeNotifier {
       notifyListeners();
       AuthMessages.showError(context, errorMessage!);
       return false;
-    }finally {
-    setLoading(false);
-  }
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Log in with email and password
@@ -150,51 +171,66 @@ class MyAuthProviders with ChangeNotifier {
     } catch (_) {
       AuthMessages.showError(context, 'An unexpected error occurred.');
     } finally {
-    setLoading(false);
-  }
+      setLoading(false);
+    }
   }
 
   // Send OTP to the given phone number
-  void sendOTP(
-    BuildContext context,
-    TextEditingController phoneController,
-  ) async {
-    final phone = '+91${phoneController.text.trim()}';
-    try {
-      await authService.verifyPhone(
-        phoneNumber: phone,
-        // Auto verification (Android only)
-        onVerificationCompleted: (credential) async {
-          final userCredential = await FirebaseAuth.instance
-              .signInWithCredential(credential);
-          user = userCredential.user;
-          notifyListeners();
+void sendOTP(BuildContext context) async {
+  final phone = '$_countryCode${phoneNumberController.text.trim()}';
+  setLoadingPhone(true); // Set loading to true when starting
+  
+  try {
+    await authService.verifyPhone(
+      phoneNumber: phone,
+      // Auto verification (Android only)
+      onVerificationCompleted: (credential) async {
+        final userCredential = await FirebaseAuth.instance
+            .signInWithCredential(credential);
+        user = userCredential.user;
+        notifyListeners();
 
-          AuthMessages.showSuccess(context, 'Auto verification successful!');
-          await saveUserLoggedIn();
+        AuthMessages.showSuccess(context, 'Auto verification successful!');
+        await saveUserLoggedIn();
+        setLoading(false); //  Stop loading
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MyNavigationBar()),
-          );
-        },
-        // If verification fails
-        onVerificationFailed: (e) {
-          AuthMessages.showError(context, 'Verification failed: ${e.message}');
-        },
-        // When OTP is sent
-        onCodeSent: (id, _) {
-          verificationId = id;
-          showOtpField = true;
-          notifyListeners();
-        },
-        // Timeout handler
-        onCodeAutoRetrievalTimeout: (_) {},
-      );
-    } catch (e) {
-      AuthMessages.showError(context, 'OTP Error: $e');
-    }
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MyNavigationBar()),
+        );
+      },
+      // If verification fails
+      onVerificationFailed: (e) {
+        setLoading(false); //  Stop loading on failure
+        AuthMessages.showError(context, 'Verification failed: ${e.message}');
+      },
+      // When OTP is sent - Show Bottom Sheet
+      onCodeSent: (id, _) {
+        verificationId = id;
+        showOtpField = true;
+        setLoading(false); //  Stop loading when OTP is sent
+        notifyListeners();
+
+        // Show OTP Bottom Sheet
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          isDismissible: false,
+          enableDrag: false,
+          builder: (context) => OtpBottomSheet(phoneNumber: phone),
+        );
+      },
+      // Timeout handler
+      onCodeAutoRetrievalTimeout: (_) {
+        setLoadingPhone(false); //  Stop loading on timeout
+      },
+    );
+  } catch (e) {
+    setLoadingPhone(false); //  Stop loading on error
+    AuthMessages.showError(context, 'OTP Error: $e');
   }
+}
+
 
   // Verify the entered OTP
   Future<void> verifyOTP(
@@ -216,11 +252,17 @@ class MyAuthProviders with ChangeNotifier {
         AuthMessages.showSuccess(context, 'OTP Verified Successfully!');
         await saveUserLoggedIn();
 
+        // Close bottom sheet first
+        Navigator.pop(context);
+
+        // Navigate to home
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyNavigationBar()),
         );
       }
+
+      phoneNumberController.clear();
     } on FirebaseAuthException catch (e) {
       AuthMessages.showError(context, 'OTP Verification Failed: ${e.message}');
     }

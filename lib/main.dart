@@ -7,6 +7,7 @@ import 'package:nest_user_app/constants/gemini_api_constance.dart';
 import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/stripe_const.dart';
 import 'package:nest_user_app/controllers/animation_provider/home_animation.dart';
+import 'package:nest_user_app/controllers/animation_provider/splash_screen_animation.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/controllers/booking_provider/booking_provider.dart';
 import 'package:nest_user_app/controllers/custometextfield_provider/custometexfield_provider.dart';
@@ -26,6 +27,7 @@ import 'package:nest_user_app/controllers/review_rating_controller/review_rating
 import 'package:nest_user_app/controllers/room_provider/room_detail_image_provider.dart';
 import 'package:nest_user_app/controllers/room_provider/room_provider.dart';
 import 'package:nest_user_app/controllers/splash_screen_povider/splash_screen_provider.dart';
+import 'package:nest_user_app/views/auth/signin_page/signin_page_main.dart';
 import 'package:nest_user_app/views/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -72,6 +74,11 @@ class MyApp extends StatelessWidget {
           create: (_) => PrivacyPolicyProvider()..loadPrivacyAndTerms(),
         ),
         ChangeNotifierProvider(create: (_) => GeminiProvider()),
+        ChangeNotifierProvider(create: (context) => LoginProvider(),),
+
+        ChangeNotifierProvider(
+          create: (context) => SplashAnimationProvider()..startAnimation(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -20,6 +20,7 @@ class MySignUpPage extends StatelessWidget {
                   children: [
                     SignupPageHeading(),
                     SignupRegistration(),
+                    SizedBox(height: 20,),
                     SignupPageBottom(),
                   ],
                 ),

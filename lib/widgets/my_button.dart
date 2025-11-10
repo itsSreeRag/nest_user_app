@@ -8,15 +8,17 @@ class MyCustomButton extends StatelessWidget {
   final double width;
   final double height;
   final String text;
+  final bool isLoading; 
 
   const MyCustomButton({
     super.key,
     required this.onPressed,
-     this.backgroundcolor=AppColors.primary,
-     this.textcolor=AppColors.white,
+    this.backgroundcolor = AppColors.primary,
+    this.textcolor = AppColors.white,
     this.width = 200,
     this.height = 50,
     required this.text,
+    this.isLoading = false,
   });
 
   @override
@@ -25,20 +27,33 @@ class MyCustomButton extends StatelessWidget {
       width: width,
       height: height,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed, // disable when loading
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundcolor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: textcolor,
-          ),
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: isLoading
+              ? SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: textcolor,
+                    strokeWidth: 2.5,
+                  ),
+                )
+              : Text(
+                  text,
+                  key: const ValueKey('buttonText'),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: textcolor,
+                  ),
+                ),
         ),
       ),
     );
