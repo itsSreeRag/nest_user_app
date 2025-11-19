@@ -15,15 +15,15 @@ class SignupPageBottom extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Already have an account? Log in ",
+              "Already have an account?",
               style: TextStyle(fontSize: 14, color: AppColors.grey),
             ),
             const Text(
-              'Log in',
+              ' Log in',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: AppColors.secondary,
               ),
             ),
           ],

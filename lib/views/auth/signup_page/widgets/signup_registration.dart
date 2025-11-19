@@ -3,10 +3,8 @@ import 'package:nest_user_app/constants/colors.dart';
 import 'package:nest_user_app/constants/my_app_validators.dart';
 import 'package:nest_user_app/constants/password_field_types.dart';
 import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
-import 'package:nest_user_app/views/auth/signin_page/signin_page_main.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:nest_user_app/widgets/my_custom_text_field.dart';
-
 import 'package:provider/provider.dart';
 
 class SignupRegistration extends StatelessWidget {
@@ -14,16 +12,13 @@ class SignupRegistration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController repasswordController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-    final MyAppValidators myAppValidators = MyAppValidators();
+    final authProvider = Provider.of<MyAuthProviders>(context);
+    final myAppValidators = MyAppValidators();
 
     return Form(
-      key: formKey,
+      key: authProvider.signupFormKey,
       child: Column(
-        children: [
+        children: [ 
           const Align(
             alignment: Alignment.topLeft,
             child: Text(
@@ -33,7 +28,7 @@ class SignupRegistration extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           MyCustomTextFormField(
-            controller: emailController,
+            controller: authProvider.signupEmailController,
             prefixIcon: Icons.email,
             hintText: 'Enter Email',
             autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -49,7 +44,7 @@ class SignupRegistration extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           MyCustomTextFormField(
-            controller: passwordController,
+            controller: authProvider.signupPasswordController,
             hintText: 'Enter password',
             prefixIcon: Icons.password,
             obscureText: true,
@@ -67,7 +62,7 @@ class SignupRegistration extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           MyCustomTextFormField(
-            controller: repasswordController,
+            controller: authProvider.signupRepasswordController,
             hintText: 'Enter Password',
             prefixIcon: Icons.password,
             obscureText: true,
@@ -76,28 +71,25 @@ class SignupRegistration extends StatelessWidget {
             validator: myAppValidators.validatePassword,
           ),
           const SizedBox(height: 30),
+
+          // Submit button
           Consumer<MyAuthProviders>(
             builder: (context, authProvider, child) {
               return authProvider.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : MyCustomButton(
                     onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        if (passwordController.text ==
-                            repasswordController.text) {
+                      if (authProvider.signupFormKey.currentState!.validate()) {
+                        if (authProvider.signupPasswordController.text ==
+                            authProvider.signupRepasswordController.text) {
                           bool success = await authProvider.createAccount(
-                            emailController.text,
-                            passwordController.text,
+                            authProvider.signupEmailController.text.trim(),
+                            authProvider.signupPasswordController.text.trim(),
                             context,
                           );
                           if (success) {
-                            Navigator.pushReplacement(
-                              // ignore: use_build_context_synchronously
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignInPageMain(),
-                              ),
-                            );
+                            // ignore: use_build_context_synchronously
+                            Navigator.pop(context);
                           }
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -109,7 +101,7 @@ class SignupRegistration extends StatelessWidget {
                         }
                       }
                     },
-                    backgroundcolor: AppColors.primary,
+                    backgroundcolor: AppColors.secondary,
                     textcolor: AppColors.white,
                     text: 'SignUp',
                   );

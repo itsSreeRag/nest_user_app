@@ -13,43 +13,37 @@ class LoginPageEmailReg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
+    final authProvider = Provider.of<MyAuthProviders>(context);
     final myAppValidators = MyAppValidators();
 
-    return  Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20),
       child: Form(
-        key: formKey,
+        key: authProvider.loginFormKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [      
-            const SizedBox(height: 40),     
-            // Email field
+          children: [
+            const SizedBox(height: 40),
             const Text(
               'E-Mail ID',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             MyCustomTextFormField(
-              controller: emailController,
+              controller: authProvider.emailController,
               prefixIcon: Icons.email_outlined,
               hintText: 'Enter your email',
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: myAppValidators.validateEmail,
             ),
-        
             const SizedBox(height: 24),
-        
-            // Password field
             const Text(
               'Password',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             MyCustomTextFormField(
-              controller: passwordController,
+              controller: authProvider.passwordController,
               hintText: 'Enter your password',
               prefixIcon: Icons.lock_outline,
               obscureText: true,
@@ -57,64 +51,45 @@ class LoginPageEmailReg extends StatelessWidget {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: myAppValidators.validatePassword,
             ),
-        
             const SizedBox(height: 16),
-        
-            // Forgot password
             Align(
               alignment: Alignment.centerRight,
               child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ForgotPasswordPage(),
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ForgotPasswordPage(),
+                      ),
                     ),
-                  );
-                },
                 child: Text(
                   'Forgot Password?',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+                    color: AppColors.blue400,
                   ),
                 ),
               ),
             ),
-        
             const SizedBox(height: 32),
-        
-            // Login button
-            Consumer<MyAuthProviders>(
-              builder: (context, authProvider, _) {
-                return SizedBox(
-                  width: double.infinity,
-                  child: MyCustomButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        authProvider.loginAccount(
-                          emailController.text.trim(),
-                          passwordController.text.trim(),
-                          context,
-                        );
-                      }
-                    },
-                    backgroundcolor: AppColors.primary,
-                    textcolor: AppColors.white,
-                    text: 'Log In',
-                    isLoading: authProvider.isLoading,
-                    width: double.infinity,
-                  ),
-                );
-              },
+            SizedBox(
+              width: double.infinity,
+              child: MyCustomButton(
+                onPressed: () {
+                  if (authProvider.loginFormKey.currentState!.validate()) {
+                    authProvider.loginAccount(
+                      authProvider.emailController.text.trim(),
+                      authProvider.passwordController.text.trim(),
+                      context,
+                    );
+                  }
+                },
+                backgroundcolor: AppColors.secondary,
+                textcolor: AppColors.white,
+                text: 'Log In',
+              ),
             ),
-        
-            const SizedBox(height: 24),
-        
-            // Sign up link
-        
-            const SizedBox(height: 20),
           ],
         ),
       ),

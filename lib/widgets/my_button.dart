@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:nest_user_app/constants/colors.dart';
 
 class MyCustomButton extends StatelessWidget {
@@ -8,7 +9,7 @@ class MyCustomButton extends StatelessWidget {
   final double width;
   final double height;
   final String text;
-  final bool isLoading; 
+  final bool isLoading;
 
   const MyCustomButton({
     super.key,
@@ -27,7 +28,7 @@ class MyCustomButton extends StatelessWidget {
       width: width,
       height: height,
       child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed, // disable when loading
+        onPressed: isLoading ? () {} : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundcolor,
           shape: RoundedRectangleBorder(
@@ -36,24 +37,28 @@ class MyCustomButton extends StatelessWidget {
         ),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          child: isLoading
-              ? SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    color: textcolor,
-                    strokeWidth: 2.5,
+          child:
+              isLoading
+                  ? SizedBox(
+                    width: 54,
+                    height: 54,
+                    child: Lottie.asset(
+                      'assets/animations/Glow loading.json',
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.fill,
+                    ),
+                  )
+                  : Text(
+                    text,
+                    key: const ValueKey('buttonText'),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: textcolor,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                )
-              : Text(
-                  text,
-                  key: const ValueKey('buttonText'),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: textcolor,
-                  ),
-                ),
         ),
       ),
     );

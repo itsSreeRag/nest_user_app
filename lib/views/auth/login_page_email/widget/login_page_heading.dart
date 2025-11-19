@@ -6,14 +6,14 @@ class LoginPageHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return  Column(
       children: [
         Text(
           'Login here',
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
+            color: AppColors.white,
           ),
         ),
         SizedBox(height: 10),

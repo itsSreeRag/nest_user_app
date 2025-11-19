@@ -105,6 +105,10 @@ flutter:
     - assets/icons/email_icon.png
 
     - assets/animations/Glow loading.json
+    - assets/animations/Connection error.json
+    - assets/animations/Loading animation blue.json
+    - assets/animations/Loading Animation White.json
+    - assets/animations/success.json
   #   - images/a_dot_ham.jpeg
 
 flutter_icons:

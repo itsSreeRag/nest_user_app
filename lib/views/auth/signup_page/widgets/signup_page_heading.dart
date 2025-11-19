@@ -13,7 +13,7 @@ class SignupPageHeading extends StatelessWidget {
           style: TextStyle(
             fontSize: 35,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
+            color: AppColors.white,
           ),
         ),
         SizedBox(height: 15),

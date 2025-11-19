@@ -6,74 +6,109 @@ import 'package:nest_user_app/controllers/auth_provider/auth_provider.dart';
 import 'package:nest_user_app/widgets/my_button.dart';
 import 'package:provider/provider.dart';
 
-class PhoneInputSection extends StatelessWidget {
+class PhoneInputSection extends StatefulWidget {
   const PhoneInputSection({super.key});
 
   @override
+  State<PhoneInputSection> createState() => _PhoneInputSectionState();
+}
+
+class _PhoneInputSectionState extends State<PhoneInputSection> {
+  final formKey = GlobalKey<FormState>();
+  final MyAppValidators myAppValidators = MyAppValidators();
+  String selectedCountryCode = '+91';
+
+  @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<MyAuthProviders>(context);
-    final MyAppValidators myAppValidators = MyAppValidators();
-    final formKey = GlobalKey<FormState>();
+    final provider = Provider.of<MyAuthProviders>(context, listen: false);
 
     return Form(
       key: formKey,
       child: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grey300),
-              borderRadius: BorderRadius.circular(8),
+          TextFormField(
+            cursorColor: AppColors.black54,
+            controller: provider.phoneNumberController,
+            keyboardType: TextInputType.phone,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.black87,
             ),
-            child: Row(
-              children: [
-                // Country Code Picker
-                CountryCodePicker(
-                  onChanged: (country) {
-                    provider.updateCountryCode(country.dialCode ?? '+91');
-                  },
-                  initialSelection: 'IN',
-                  favorite: const ['+91', 'IN'],
-                  showCountryOnly: false,
-                  showOnlyCountryWhenClosed: false,
-                  alignLeft: false,
-                  padding: EdgeInsets.zero,
-                  flagWidth: 24,
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(width: 1, height: 40, color: AppColors.grey300),
-                // Phone Number Input
-                Expanded(
-                  child: TextFormField(
-                    controller: provider.phoneNumberController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      hintText: 'Enter mobile number',
-                      hintStyle: TextStyle(color: AppColors.grey, fontSize: 16),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
+            decoration: InputDecoration(
+              hintText: 'Enter mobile number',
+              hintStyle: TextStyle(
+                color: AppColors.grey,
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+              ),
+              prefixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Country Code Picker as prefix
+                  CountryCodePicker(
+                    onChanged: (country) {
+                      setState(() {
+                        selectedCountryCode = country.dialCode ?? '+91';
+                      });
+                      provider.updateCountryCode(selectedCountryCode);
+                    },
+                    initialSelection: 'IN',
+                    favorite: const ['+91', 'IN'],
+                    showCountryOnly: false,
+                    showOnlyCountryWhenClosed: false,
+                    alignLeft: false,
+                    padding: EdgeInsets.only(left: 12),
+                    flagWidth: 24,
+                    textStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.black87,
                     ),
-                    validator: myAppValidators.validatePhone,
                   ),
-                ),
-              ],
+                  // Vertical divider
+                  Container(
+                    width: 1,
+                    height: 40,
+                    color: AppColors.grey300,
+                    margin: EdgeInsets.only(right: 12),
+                  ),
+                ],
+              ),
+              // Border styling
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: AppColors.grey300, width: 1),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: AppColors.green, width: 1.5),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.red, width: 1),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.red, width: 1.5),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
             ),
+            validator: myAppValidators.validatePhone,
           ),
           SizedBox(height: 20),
           // Continue button with loading state
           MyCustomButton(
+            backgroundcolor: AppColors.secondary,
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 provider.sendOTP(context);
               }
             },
             text: 'Continue',
-            isLoading: provider.isLoadingPhone,
           ),
         ],
       ),

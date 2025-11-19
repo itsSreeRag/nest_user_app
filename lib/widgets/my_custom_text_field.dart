@@ -96,11 +96,11 @@ class MyCustomTextFormField extends StatelessWidget {
                 hintStyle: TextStyle(color: AppColors.black38, fontSize: 14),
                 prefixIcon:
                     prefixIcon != null
-                        ? Icon(prefixIcon, color: AppColors.primary, size: 20)
+                        ? Icon(prefixIcon, color: AppColors.secondary, size: 20)
                         : null,
                 suffixIcon:
                     isPasswordField
-                        ? IconButton(
+                        ? IconButton(color: AppColors.secondary,
                           onPressed: () {
                             provider.toggleVisibility(passwordType!);
                           },
@@ -118,21 +118,21 @@ class MyCustomTextFormField extends StatelessWidget {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: borderColor ?? AppColors.grey300,
+                    color: borderColor ?? AppColors.secondary,
                     width: 1,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: focusedBorderColor ?? AppColors.primary,
+                    color: focusedBorderColor ?? AppColors.green,
                     width: 1.5,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: enabledBorderColor ?? AppColors.grey300,
+                    color: enabledBorderColor ?? AppColors.grey400,
                     width: 1,
                   ),
                 ),

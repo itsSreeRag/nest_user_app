@@ -27,7 +27,6 @@ import 'package:nest_user_app/controllers/review_rating_controller/review_rating
 import 'package:nest_user_app/controllers/room_provider/room_detail_image_provider.dart';
 import 'package:nest_user_app/controllers/room_provider/room_provider.dart';
 import 'package:nest_user_app/controllers/splash_screen_povider/splash_screen_provider.dart';
-import 'package:nest_user_app/views/auth/signin_page/signin_page_main.dart';
 import 'package:nest_user_app/views/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -74,7 +73,6 @@ class MyApp extends StatelessWidget {
           create: (_) => PrivacyPolicyProvider()..loadPrivacyAndTerms(),
         ),
         ChangeNotifierProvider(create: (_) => GeminiProvider()),
-        ChangeNotifierProvider(create: (context) => LoginProvider(),),
 
         ChangeNotifierProvider(
           create: (context) => SplashAnimationProvider()..startAnimation(),

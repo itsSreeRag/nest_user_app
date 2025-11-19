@@ -29,7 +29,7 @@ class SignUpLink extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+                    color: AppColors.secondary,
                   ),
                 ),
               ],

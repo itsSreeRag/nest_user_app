@@ -24,16 +24,33 @@ class MyAuthProviders with ChangeNotifier {
   bool showOtpField = false;
   String? verificationId;
   bool isLoading = false;
-
-  bool isLoadingPhone=false;
-
-  
+  bool isLoadingPhone = false;
+  bool isLoadingOtp = false;
 
   String _countryCode = '+91';
   TextEditingController phoneNumberController = TextEditingController();
 
   String get countryCode => _countryCode;
-  // String get phoneNumber => _phoneNumber;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final loginFormKey = GlobalKey<FormState>();
+
+  final signupEmailController = TextEditingController();
+  final signupPasswordController = TextEditingController();
+  final signupRepasswordController = TextEditingController();
+  final signupFormKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    phoneNumberController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    signupEmailController.dispose();
+    signupPasswordController.dispose();
+    signupRepasswordController.dispose();
+    super.dispose();
+  }
 
   void updateCountryCode(String code) {
     _countryCode = code;
@@ -45,18 +62,18 @@ class MyAuthProviders with ChangeNotifier {
     notifyListeners();
   }
 
-   void setLoadingPhone(bool value) {
+  void setLoadingPhone(bool value) {
     isLoadingPhone = value;
     notifyListeners();
   }
 
-  // Check if user is logged in using SharedPreferences
+  // -------------------- AUTH METHODS --------------------
+
   Future<bool> checkUserLogin() async {
     final sharedPref = await SharedPreferences.getInstance();
     return sharedPref.getBool('isLoggedIn') ?? false;
   }
 
-  // Save login state in SharedPreferences
   Future<void> saveUserLoggedIn() async {
     final sharedPref = await SharedPreferences.getInstance();
     sharedPref.setBool('isLoggedIn', true);
@@ -94,7 +111,6 @@ class MyAuthProviders with ChangeNotifier {
     );
   }
 
-  // Sign in using Google account
   Future<bool> regUsingGoogleAcc(BuildContext context) async {
     setLoading(true);
     try {
@@ -105,8 +121,6 @@ class MyAuthProviders with ChangeNotifier {
         await saveUserToFirestore(context, user!);
         AuthMessages.showSuccess(context, 'Google Sign-In Successful');
         await saveUserLoggedIn();
-
-        // Navigate to home screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyNavigationBar()),
@@ -122,7 +136,6 @@ class MyAuthProviders with ChangeNotifier {
     }
   }
 
-  // Register a new user using email and password
   Future<bool> createAccount(
     String email,
     String password,
@@ -149,7 +162,6 @@ class MyAuthProviders with ChangeNotifier {
     }
   }
 
-  // Log in with email and password
   Future<void> loginAccount(
     String email,
     String password,
@@ -160,7 +172,6 @@ class MyAuthProviders with ChangeNotifier {
       await authService.loginWithEmail(email, password);
       await saveUserLoggedIn();
 
-      // Navigate to home screen
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyNavigationBar()),
@@ -172,71 +183,67 @@ class MyAuthProviders with ChangeNotifier {
       AuthMessages.showError(context, 'An unexpected error occurred.');
     } finally {
       setLoading(false);
+      emailController.clear();
+      passwordController.clear();
     }
   }
 
-  // Send OTP to the given phone number
-void sendOTP(BuildContext context) async {
-  final phone = '$_countryCode${phoneNumberController.text.trim()}';
-  setLoadingPhone(true); // Set loading to true when starting
-  
-  try {
-    await authService.verifyPhone(
-      phoneNumber: phone,
-      // Auto verification (Android only)
-      onVerificationCompleted: (credential) async {
-        final userCredential = await FirebaseAuth.instance
-            .signInWithCredential(credential);
-        user = userCredential.user;
-        notifyListeners();
+  void sendOTP(BuildContext context) async {
+    final phone = '$_countryCode${phoneNumberController.text.trim()}';
+    setLoadingPhone(true);
 
-        AuthMessages.showSuccess(context, 'Auto verification successful!');
-        await saveUserLoggedIn();
-        setLoading(false); //  Stop loading
+    try {
+      await authService.verifyPhone(
+        phoneNumber: phone,
+        onVerificationCompleted: (credential) async {
+          final userCredential = await FirebaseAuth.instance
+              .signInWithCredential(credential);
+          user = userCredential.user;
+          notifyListeners();
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyNavigationBar()),
-        );
-      },
-      // If verification fails
-      onVerificationFailed: (e) {
-        setLoading(false); //  Stop loading on failure
-        AuthMessages.showError(context, 'Verification failed: ${e.message}');
-      },
-      // When OTP is sent - Show Bottom Sheet
-      onCodeSent: (id, _) {
-        verificationId = id;
-        showOtpField = true;
-        setLoading(false); //  Stop loading when OTP is sent
-        notifyListeners();
+          AuthMessages.showSuccess(context, 'Auto verification successful!');
+          await saveUserLoggedIn();
+          setLoading(false);
 
-        // Show OTP Bottom Sheet
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          isDismissible: false,
-          enableDrag: false,
-          builder: (context) => OtpBottomSheet(phoneNumber: phone),
-        );
-      },
-      // Timeout handler
-      onCodeAutoRetrievalTimeout: (_) {
-        setLoadingPhone(false); //  Stop loading on timeout
-      },
-    );
-  } catch (e) {
-    setLoadingPhone(false); //  Stop loading on error
-    AuthMessages.showError(context, 'OTP Error: $e');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyNavigationBar()),
+          );
+        },
+        onVerificationFailed: (e) {
+          setLoading(false);
+          AuthMessages.showError(context, 'Verification failed: ${e.message}');
+        },
+        onCodeSent: (id, _) {
+          verificationId = id;
+          showOtpField = true;
+          setLoading(false);
+          notifyListeners();
+
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            isDismissible: false,
+            enableDrag: false,
+            builder: (context) => OtpBottomSheet(phoneNumber: phone),
+          );
+        },
+        onCodeAutoRetrievalTimeout: (_) {
+          setLoadingPhone(false);
+        },
+      );
+    } catch (e) {
+      setLoadingPhone(false);
+      AuthMessages.showError(context, 'OTP Error: $e');
+    }
   }
-}
 
-
-  // Verify the entered OTP
   Future<void> verifyOTP(
     BuildContext context,
     TextEditingController otpController,
   ) async {
+    isLoadingOtp = true;
+    notifyListeners();
     try {
       if (verificationId == null) {
         AuthMessages.showError(context, 'No OTP request found.');
@@ -252,10 +259,7 @@ void sendOTP(BuildContext context) async {
         AuthMessages.showSuccess(context, 'OTP Verified Successfully!');
         await saveUserLoggedIn();
 
-        // Close bottom sheet first
         Navigator.pop(context);
-
-        // Navigate to home
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyNavigationBar()),
@@ -263,30 +267,31 @@ void sendOTP(BuildContext context) async {
       }
 
       phoneNumberController.clear();
+      isLoadingOtp = false;
+      notifyListeners();
     } on FirebaseAuthException catch (e) {
+      isLoadingOtp = false;
+      notifyListeners();
       AuthMessages.showError(context, 'OTP Verification Failed: ${e.message}');
     }
   }
 
-  // Send password reset email
   Future<void> resetPassword(String email) async {
     await authService.sendPasswordReset(email);
   }
 
-  // Save user data to Firestore (if new user), or set existing user
   Future<void> saveUserToFirestore(BuildContext context, User user) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
     final existingUser = await userProvider.getUserById(user.uid);
 
     if (existingUser == null) {
       String? username;
       if (user.displayName == null) {
         if (user.email != null) {
-          username = user.email!.split('@')[0]; // Extract email prefix
+          username = user.email!.split('@')[0];
         } else {
           username =
-              'user${user.phoneNumber!.substring(user.phoneNumber!.length - 4)}'; // Fallback username
+              'user${user.phoneNumber!.substring(user.phoneNumber!.length - 4)}';
         }
       }
 
@@ -299,9 +304,9 @@ void sendOTP(BuildContext context) async {
         profileImage: user.photoURL,
       );
 
-      await userProvider.addUser(userModel); // Save new user to Firestore
+      await userProvider.addUser(userModel);
     } else {
-      userProvider.setCurrentUser(existingUser); // Use existing user data
+      userProvider.setCurrentUser(existingUser);
     }
   }
 }

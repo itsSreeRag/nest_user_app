@@ -84,7 +84,10 @@ class ProfileDetailsMain extends StatelessWidget {
                           child: CircleAvatar(
                             backgroundColor: AppColors.grey300,
                             radius: 30,
-                            child: Icon(Icons.camera_alt),
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: AppColors.black,
+                            ),
                           ),
                         ),
                       ),
@@ -92,33 +95,56 @@ class ProfileDetailsMain extends StatelessWidget {
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(height: 20),
-                      MyCustomTextFormField(
-                        prefixIcon: Icons.person,
-                        controller: nameController,
-                        hintText: 'Enter Name',
-                        validator: myAppValidators.validateEmail,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Personal Information',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+
+                          // Name Field
+                          _buildInputLabel('Full Name'),
+                          SizedBox(height: 8),
+                          MyCustomTextFormField(
+                            prefixIcon: Icons.person_outline_rounded,
+                            controller: nameController,
+                            hintText: 'Enter your full name',
+                            validator: myAppValidators.validateEmail,
+                          ),
+                          SizedBox(height: 20),
+
+                          // Email Field
+                          _buildInputLabel('Email Address'),
+                          SizedBox(height: 8),
+                          MyCustomTextFormField(
+                            prefixIcon: Icons.email_outlined,
+                            controller: emailController,
+                            hintText: 'Enter your email',
+                            validator: myAppValidators.validateEmail,
+                          ),
+                          SizedBox(height: 20),
+
+                          // Phone Field
+                          _buildInputLabel('Phone Number'),
+                          SizedBox(height: 8),
+                          MyCustomTextFormField(
+                            controller: phoneNumController,
+                            prefixIcon: Icons.phone_android_rounded,
+                            hintText: 'Enter your phone number',
+                            validator: myAppValidators.validateEmail,
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 10),
-
-                      MyCustomTextFormField(
-                        prefixIcon: Icons.email,
-                        controller: emailController,
-                        hintText: 'Enter The Email',
-                        validator: myAppValidators.validateEmail,
-                      ),
-                      SizedBox(height: 10),
-
-                      MyCustomTextFormField(
-                        controller: phoneNumController,
-                        prefixIcon: Icons.phone_android,
-                        hintText: 'Enter The phone Number',
-                        validator: myAppValidators.validateEmail,
-                      ),
-
-                      SizedBox(height: 50),
-
+                      SizedBox(height: 20),
                       MyCustomButton(
                         width: double.infinity,
                         onPressed: () async {
@@ -154,6 +180,21 @@ class ProfileDetailsMain extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInputLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: Colors.black87,
+          letterSpacing: 0.2,
         ),
       ),
     );
